@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: livestock-app
+    env: docker
+    region: ohio
+    plan: free # Change if deploying to a paid tier
+    # Render uses the Dockerfile by default when env is 'docker'
+    
+    # Environment variables for the Docker container
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_SSLMODE
+        value: require
+      - key: DB_OPTIONS
+        value: '--endpoint=ep-royal-haze-aq72ygpv'
+        
+      # Database secrets - it is best practice to configure these directly in the Render Dashboard
+      # However, defining sync: false ensures they are present as required fields
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: '5432'
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
