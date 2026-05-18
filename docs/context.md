@@ -154,7 +154,9 @@ The application uses a unified, dynamic navbar (`layouts/app.blade.php`) that ad
 
 ### ✅ Phase 5: Production Deployment & Bug Fixes
 - **Google OAuth Deployment**: Added `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REDIRECT_URI` to `render.yaml`. Handled randomized passwords for Google users to prevent database errors on user creation.
-- **Render HTTPS Proxy Fixes**: Configured `APP_URL` and `ASSET_URL` to enforce HTTPS on Vite assets, solving "Mixed Content" and missing CSS issues. Added `mime.types` to Nginx config to serve CSS properly.
+- **Render HTTPS Proxy Fixes**: Configured `APP_URL` and `ASSET_URL` to enforce HTTPS on Vite assets, solving "Mixed Content" and missing CSS issues. Added `mime.types` to Nginx config to serve CSS properly. Added trusted proxies in `bootstrap/app.php` and forced HTTPS via `AppServiceProvider` to ensure all forms submit over HTTPS.
+- **Session Security**: Added `SESSION_SECURE_COOKIE` and `SESSION_SAME_SITE=lax` configurations for secure cookie handling in production.
+- **Form Autofill & Warnings**: Fixed browser "This form is not secure. Autofill has been turned off." warnings by ensuring correct autocomplete attributes (`email`, `new-password`, `tel`, `street-address`) across login, register, and profile completion forms.
 - **Blade Template Fixes**: Resolved layout structure issues in `resources/views/profile/complete.blade.php` by properly structuring `@extends` and `@section('content')`.
 - **Production Status**: Successfully deployed to Render using a multi-stage Docker build with a Neon PostgreSQL database. Fully functional for real-world usage.
 

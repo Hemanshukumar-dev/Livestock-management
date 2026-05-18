@@ -59,7 +59,7 @@
                 name="email"
                 value="{{ old('email') }}"
                 required
-                autocomplete="username"
+                autocomplete="email"
                 placeholder="you@example.com"
                 class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
             />
