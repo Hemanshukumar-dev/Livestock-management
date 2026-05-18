@@ -3,7 +3,7 @@
 @section('title', 'Owners')
 
 @section('content')
-    @php($currentUser = auth()->user())
+    @php $currentUser = auth()->user(); @endphp
 
     @if (session('success'))
         <div class="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 shadow-sm">
@@ -19,11 +19,11 @@
         </div>
     @endif
 
-    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-sky-600">Owner Records</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">All owners and their livestock</h2>
-            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Browse owner profiles and the livestock attached to each owner from a single clean interface.</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">Owner Records</p>
+            <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">All owners and their livestock</h2>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-600">Browse owner profiles and the livestock attached to each owner from a single clean interface.</p>
         </div>
 
         @if ($currentUser?->isAdmin())
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Search & Filter Section -->
-    <form method="GET" action="{{ route('owners.index') }}" class="mb-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <form method="GET" action="{{ route('owners.index') }}" class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div class="mb-4">
             <p class="text-sm font-semibold uppercase tracking-[0.15em] text-slate-500">Search & Filter</p>
         </div>
@@ -91,149 +91,51 @@
     </form>
 
     @forelse ($owners as $owner)
-        <section class="mb-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <div class="flex flex-col gap-4 border-b border-slate-100 px-6 py-5 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                    <h3 class="text-xl font-semibold text-slate-900">{{ $owner->name }}</h3>
-                    <p class="mt-1 inline-flex rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">{{ $owner->owner_code }}</p>
-                    <p class="mt-1 text-sm text-slate-500">Phone: {{ $owner->phone }}</p>
-                    <p class="mt-1 text-sm text-slate-500">Address: {{ $owner->address }}</p>
-                </div>
-                <div class="flex flex-col items-start gap-3 sm:items-end">
-                    <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                        <span class="font-semibold text-slate-900">{{ $owner->livestock->count() }}</span> livestock record{{ $owner->livestock->count() === 1 ? '' : 's' }}
+        <section class="mb-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-sky-200">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-base font-bold text-slate-900">{{ $owner->name }}</h3>
+                        <span class="rounded-full bg-sky-50 border border-sky-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700">{{ $owner->owner_code }}</span>
                     </div>
+                    <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+                        <span class="flex items-center gap-1"><span class="text-slate-400">📞</span> {{ $owner->phone ?: 'No phone' }}</span>
+                        <span class="flex items-center gap-1"><span class="text-slate-400">📍</span> {{ Str::limit($owner->address ?: 'No address', 40) }}</span>
+                        <span class="flex items-center gap-1 font-semibold text-slate-800"><span class="text-sky-500">🐄</span> {{ $owner->livestock->count() }} records</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2 sm:shrink-0">
+                    <a href="{{ route('livestock.index', ['owner_code' => $owner->owner_code]) }}" class="inline-flex items-center justify-center rounded-xl bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-100">
+                        View Livestock
+                    </a>
 
                     @if ($currentUser?->isAdmin() || ($currentUser?->isOwner() && $owner->user_id === $currentUser->id))
-                        <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('owners.edit', $owner->id) }}" class="inline-flex items-center justify-center rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">
-                                Edit
-                            </a>
+                        <a href="{{ route('owners.edit', $owner->id) }}" class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+                            Edit
+                        </a>
 
-                            <form method="POST" action="{{ route('owners.destroy', $owner->id) }}" onsubmit="return confirm('Delete this owner and all related livestock?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="inline-flex items-center justify-center rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
+                        <form method="POST" action="{{ route('owners.destroy', $owner->id) }}" onsubmit="return confirm('Delete this owner and all related livestock?');" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="inline-flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100">
+                                Delete
+                            </button>
+                        </form>
                     @endif
                 </div>
             </div>
-
-            <div class="px-6 py-5">
-                @if ($owner->livestock->isEmpty())
-                    <p class="text-sm text-slate-500">No livestock registered for this owner yet.</p>
-                @else
-                    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                        @foreach ($owner->livestock as $animal)
-                            <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                <div class="flex items-start justify-between gap-3">
-                                    <div>
-                                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">Livestock</p>
-                                        <h4 class="mt-1 text-lg font-semibold text-slate-900">{{ $animal->type }}</h4>
-                                    </div>
-                                    @php
-                                        $healthStatusClass = match ($animal->health_status) {
-                                            'Healthy' => 'bg-emerald-100 text-emerald-700',
-                                            'Sick' => 'bg-red-100 text-red-700',
-                                            'Under Treatment' => 'bg-yellow-100 text-yellow-800',
-                                            'Hospitalized' => 'bg-slate-100 text-slate-800',
-                                            'Injured' => 'bg-amber-100 text-amber-800',
-                                            default => 'bg-slate-100 text-slate-600',
-                                        };
-                                    @endphp
-                                    <span class="rounded-full px-3 py-1 text-xs font-medium shadow-sm {{ $healthStatusClass }}">{{ $animal->health_status }}</span>
-                                </div>
-
-                                <dl class="mt-4 space-y-2 text-sm text-slate-600">
-                                    <div class="flex justify-between gap-4">
-                                        <dt class="font-medium text-slate-500">Breed</dt>
-                                        <dd class="text-right text-slate-800">{{ $animal->breed ?? 'N/A' }}</dd>
-                                    </div>
-                                    <div class="flex justify-between gap-4">
-                                        <dt class="font-medium text-slate-500">Age</dt>
-                                        <dd class="text-right text-slate-800">{{ $animal->age ?? 'N/A' }}</dd>
-                                    </div>
-                                    <div class="flex justify-between gap-4">
-                                        <dt class="font-medium text-slate-500">Health</dt>
-                                        <dd class="text-right text-slate-800">{{ $animal->health_status }}</dd>
-                                    </div>
-                                    <div class="flex justify-between gap-4">
-                                        <dt class="font-medium text-slate-500">Tag</dt>
-                                        <dd class="text-right font-mono text-slate-800">{{ $animal->tag_number }}</dd>
-                                    </div>
-                                </dl>
-
-                                <details class="mt-4 rounded-2xl border border-slate-200 bg-white/80 p-3">
-                                    <summary class="cursor-pointer list-none text-sm font-semibold text-slate-800">History</summary>
-
-                                    <div class="mt-3 space-y-3">
-                                        <div class="space-y-2">
-                                            @forelse ($animal->histories as $history)
-                                                <div class="rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                                                    <div class="flex flex-wrap items-center justify-between gap-2">
-                                                        <span class="font-semibold text-slate-900">{{ $history->event_type }} - {{ \Illuminate\Support\Carbon::parse($history->event_date)->format('d M Y') }}</span>
-                                                    </div>
-                                                    @if ($history->description)
-                                                        <p class="mt-1 text-slate-600">{{ $history->description }}</p>
-                                                    @endif
-                                                </div>
-                                            @empty
-                                                <p class="text-sm text-slate-500">No history records yet</p>
-                                            @endforelse
-                                        </div>
-
-                                        <form method="POST" action="{{ route('livestock.histories.store', $animal->id) }}" class="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                                            @csrf
-                                            <div class="grid gap-3 sm:grid-cols-3">
-                                                <div>
-                                                    <label class="mb-1 block text-xs font-medium uppercase tracking-[0.15em] text-slate-500">Event Type</label>
-                                                    <select name="event_type" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20" required>
-                                                        <option value="">Select type</option>
-                                                        <option value="Vaccination">Vaccination</option>
-                                                        <option value="Treatment">Treatment</option>
-                                                        <option value="Checkup">Checkup</option>
-                                                        <option value="Illness">Illness</option>
-                                                        <option value="Deworming">Deworming</option>
-                                                        <option value="Surgery">Surgery</option>
-                                                    </select>
-                                                </div>
-
-                                                <div>
-                                                    <label class="mb-1 block text-xs font-medium uppercase tracking-[0.15em] text-slate-500">Event Date</label>
-                                                    <input type="date" name="event_date" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20" required>
-                                                </div>
-
-                                                <div class="sm:col-span-1">
-                                                    <label class="mb-1 block text-xs font-medium uppercase tracking-[0.15em] text-slate-500">Description</label>
-                                                    <textarea name="description" rows="1" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20" placeholder="Short details"></textarea>
-                                                </div>
-                                            </div>
-
-                                            <div class="flex justify-end">
-                                                <button type="submit" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Add History</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </details>
-                            </article>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
         </section>
     @empty
-        <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
+        <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center shadow-sm">
             @if ($search || $type)
-                <h3 class="text-xl font-semibold text-slate-900">No owners found</h3>
-                <p class="mt-2 text-sm text-slate-600">No owners match your search or filter criteria. Try adjusting your filters.</p>
-                <a href="{{ route('owners.index') }}" class="mt-6 inline-flex rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">Clear Filters</a>
+                <h3 class="text-lg font-bold text-slate-900">No owners found</h3>
+                <p class="mt-1 text-sm text-slate-600">No owners match your search or filter criteria. Try adjusting your filters.</p>
+                <a href="{{ route('owners.index') }}" class="mt-4 inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Clear Filters</a>
             @else
-                <h3 class="text-xl font-semibold text-slate-900">No owners yet</h3>
-                <p class="mt-2 text-sm text-slate-600">Create the first owner and livestock entry to start populating the database.</p>
-                <a href="{{ route('owners.create') }}" class="mt-6 inline-flex rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">Add New Owner</a>
+                <h3 class="text-lg font-bold text-slate-900">No owners yet</h3>
+                <p class="mt-1 text-sm text-slate-600">Create the first owner and livestock entry to start populating the database.</p>
+                <a href="{{ route('owners.create') }}" class="mt-4 inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Add New Owner</a>
             @endif
         </div>
     @endforelse

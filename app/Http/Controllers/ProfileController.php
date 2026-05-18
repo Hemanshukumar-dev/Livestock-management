@@ -17,23 +17,53 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $owner = $user->isOwner() ? $user->owner : null;
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'owner' => $owner,
         ]);
     }
 
     /**
      * Update the user's profile information.
+     * Also syncs owner table fields (phone, address) for owner users.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+
+        // Sync owner fields if the user is an owner
+        if ($user->isOwner() && $user->owner) {
+            $request->validate([
+                'phone' => ['nullable', 'string', 'max:20'],
+                'address' => ['nullable', 'string', 'max:500'],
+                'state' => ['nullable', 'string', 'max:255'],
+            ]);
+
+            $owner = $user->owner;
+            $owner->name = $user->name;
+
+            if ($request->filled('phone')) {
+                $owner->phone = $request->input('phone');
+            }
+            if ($request->filled('address')) {
+                $owner->address = $request->input('address');
+            }
+            if ($request->filled('state')) {
+                $owner->state = $request->input('state');
+            }
+
+            $owner->save();
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -62,8 +92,22 @@ class ProfileController extends Controller
     /**
      * Show profile completion form for owners.
      */
-    public function complete(Request $request): View
+    public function complete(Request $request): View|RedirectResponse
     {
+        $user = $request->user();
+
+        // If profile is already complete, redirect to dashboard
+        if ($user->isOwner()) {
+            $owner = $user->owner;
+            if ($owner && $owner->phone !== null && $owner->address !== null) {
+                return redirect()->route('owner.dashboard');
+            }
+        }
+
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('profile.complete');
     }
 
@@ -74,7 +118,8 @@ class ProfileController extends Controller
     {
         $request->validate([
             'phone' => ['required', 'string', 'max:20'],
-            'address' => ['required', 'string'],
+            'address' => ['required', 'string', 'max:500'],
+            'state' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = $request->user();
@@ -88,15 +133,18 @@ class ProfileController extends Controller
                 'name' => $user->name,
                 'phone' => $request->phone,
                 'address' => $request->address,
+                'state' => $request->state,
             ]);
         } else {
             $owner->update([
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'name' => $user->name,
+                'state' => $request->state,
             ]);
         }
 
-        return Redirect::route('owner.dashboard');
+        return Redirect::route('owner.dashboard')
+            ->with('success', 'Profile completed successfully! Welcome to your dashboard.');
     }
 }

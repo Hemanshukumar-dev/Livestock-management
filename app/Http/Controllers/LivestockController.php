@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Livestock;
+use App\Models\Owner;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -51,7 +52,7 @@ class LivestockController extends Controller
 
         // Filter: breed
         if ($request->filled('breed')) {
-            $query->where('breed', 'like', '%' . $request->query('breed') . '%');
+            $query->where('breed', $request->query('breed'));
         }
 
         // Filter: health status
@@ -62,8 +63,8 @@ class LivestockController extends Controller
         $livestock = $query->latest()->paginate(20)->withQueryString();
 
         // Populate filter dropdowns
-        $livestockTypes = Livestock::select('type')->distinct()->orderBy('type')->pluck('type');
-        $breeds = Livestock::select('breed')->whereNotNull('breed')->distinct()->orderBy('breed')->pluck('breed');
+        $livestockTypes = array_keys(config('livestock.types', []));
+        $breeds = Livestock::select('breed')->whereNotNull('breed')->where('breed', '!=', '')->distinct()->orderBy('breed')->pluck('breed');
         $healthStatuses = ['Healthy', 'Sick', 'Under Treatment', 'Hospitalized', 'Injured'];
 
         return view('livestock.index', compact(
@@ -72,6 +73,62 @@ class LivestockController extends Controller
             'breeds',
             'healthStatuses'
         ));
+    }
+
+    /**
+     * Show the form for creating a new livestock.
+     */
+    public function create(Request $request): View
+    {
+        $user = $request->user();
+        $owners = [];
+
+        if ($user && $user->isAdmin()) {
+            $owners = Owner::orderBy('name')->get();
+        }
+
+        $livestockTypes = config('livestock.types', []);
+        $healthStatuses = ['Healthy', 'Sick', 'Under Treatment', 'Hospitalized', 'Injured'];
+
+        return view('livestock.create', compact('owners', 'livestockTypes', 'healthStatuses', 'user'));
+    }
+
+    /**
+     * Store a newly created livestock in storage.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $rules = [
+            'type' => ['required', 'string', 'max:255'],
+            'breed' => ['nullable', 'string', 'max:255'],
+            'age' => ['required', 'integer', 'min:0'],
+            'health_status' => ['required', 'string', 'in:Healthy,Sick,Under Treatment,Hospitalized,Injured'],
+            'tag_number' => ['required', 'string', 'max:255', 'unique:livestock,tag_number'],
+            'source' => ['required', 'string', 'in:Born,Purchased'],
+            'date_added' => ['nullable', 'date'],
+        ];
+
+        if ($user && $user->isAdmin()) {
+            $rules['owner_id'] = ['required', 'exists:owners,id'];
+        }
+
+        $validated = $request->validate($rules);
+
+        if ($user && $user->isOwner()) {
+            $owner = Owner::where('user_id', $user->id)->first();
+            if (!$owner) {
+                return back()->withErrors(['error' => 'You do not have an owner profile linked. Please contact admin.']);
+            }
+            $validated['owner_id'] = $owner->id;
+        }
+
+        $livestock = Livestock::create($validated);
+
+        return redirect()
+            ->route('livestock.show', $livestock->id)
+            ->with('success', 'Livestock record added successfully.');
     }
 
     /**
@@ -114,7 +171,10 @@ class LivestockController extends Controller
             }
         }
 
-        return view('livestock.edit', compact('livestock'));
+        $livestockTypes = config('livestock.types', []);
+        $healthStatuses = ['Healthy', 'Sick', 'Under Treatment', 'Hospitalized', 'Injured'];
+
+        return view('livestock.edit', compact('livestock', 'livestockTypes', 'healthStatuses'));
     }
 
     /**

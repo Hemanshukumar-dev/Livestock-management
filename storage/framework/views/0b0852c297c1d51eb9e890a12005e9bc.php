@@ -1,15 +1,13 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Profile Settings'); ?>
 
-@section('title', 'Profile Settings')
-
-@section('content')
-    @php
+<?php $__env->startSection('content'); ?>
+    <?php
         $user = auth()->user();
         $owner = $user->isOwner() ? $user->owner : null;
         $states = ['Haryana', 'Punjab', 'Rajasthan', 'Uttar Pradesh', 'Delhi', 'Maharashtra', 'Gujarat', 'Karnataka', 'Tamil Nadu', 'Bihar', 'Madhya Pradesh', 'West Bengal', 'Telangana', 'Andhra Pradesh', 'Kerala', 'Odisha', 'Assam', 'Uttarakhand', 'Himachal Pradesh', 'Chhattisgarh', 'Jharkhand'];
-    @endphp
+    ?>
 
-    {{-- Page Header --}}
+    
     <div class="mb-8">
         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">⚙️ Settings</p>
         <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">Profile Settings</h2>
@@ -18,62 +16,76 @@
         </p>
     </div>
 
-    {{-- Success Message --}}
-    @if (session('status') === 'profile-updated')
+    
+    <?php if(session('status') === 'profile-updated'): ?>
         <div class="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800 shadow-sm">
             <span class="mr-2">✅</span>Profile updated successfully.
         </div>
-    @endif
+    <?php endif; ?>
 
     <div class="space-y-8 max-w-2xl">
 
-        {{-- Account Information --}}
+        
         <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <h3 class="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-green-700 mb-2">
                 <span>👤</span> Account Information
             </h3>
             <p class="text-sm text-slate-500 mb-6">Update your name and email address.</p>
 
-            <form method="POST" action="{{ route('profile.update') }}" class="space-y-5">
-                @csrf
-                @method('patch')
+            <form method="POST" action="<?php echo e(route('profile.update')); ?>" class="space-y-5">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('patch'); ?>
 
-                {{-- Name --}}
+                
                 <div>
                     <label for="name" class="block text-sm font-medium text-slate-700">Full Name</label>
                     <input
                         id="name"
                         type="text"
                         name="name"
-                        value="{{ old('name', $user->name) }}"
+                        value="<?php echo e(old('name', $user->name)); ?>"
                         required
                         autocomplete="name"
                         class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                     />
-                    @error('name')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
-                {{-- Email --}}
+                
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
                     <input
                         id="email"
                         type="email"
                         name="email"
-                        value="{{ old('email', $user->email) }}"
+                        value="<?php echo e(old('email', $user->email)); ?>"
                         required
                         autocomplete="username"
                         class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                     />
-                    @error('email')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
-                {{-- Owner: Phone & Address --}}
-                @if ($owner)
+                
+                <?php if($owner): ?>
                     <div class="border-t border-slate-200 pt-5">
                         <p class="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400 mb-4">Owner Contact Details</p>
 
@@ -84,14 +96,21 @@
                                     id="phone"
                                     type="tel"
                                     name="phone"
-                                    value="{{ old('phone', $owner->phone) }}"
+                                    value="<?php echo e(old('phone', $owner->phone)); ?>"
                                     maxlength="20"
                                     placeholder="e.g. +91 98765 43210"
                                     class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                                 />
-                                @error('phone')
-                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                @enderror
+                                <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div>
@@ -103,10 +122,17 @@
                                     maxlength="500"
                                     placeholder="Your farm or home address"
                                     class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 resize-none"
-                                >{{ old('address', $owner->address) }}</textarea>
-                                @error('address')
-                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                @enderror
+                                ><?php echo e(old('address', $owner->address)); ?></textarea>
+                                <?php $__errorArgs = ['address'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div>
@@ -117,30 +143,37 @@
                                     class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                                 >
                                     <option value="">Select your state...</option>
-                                    @foreach ($states as $st)
-                                        <option value="{{ $st }}" @selected(old('state', $owner->state) === $st)>{{ $st }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $states; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $st): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($st); ?>" <?php if(old('state', $owner->state) === $st): echo 'selected'; endif; ?>><?php echo e($st); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
-                                @error('state')
-                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                @enderror
+                                <?php $__errorArgs = ['state'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                {{-- Owner Code (read-only) --}}
-                @if ($owner)
+                
+                <?php if($owner): ?>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-medium text-slate-500">Owner Code</span>
-                            <span class="rounded-full bg-sky-50 border border-sky-200 px-3 py-1 text-xs font-semibold text-sky-700">{{ $owner->owner_code }}</span>
+                            <span class="rounded-full bg-sky-50 border border-sky-200 px-3 py-1 text-xs font-semibold text-sky-700"><?php echo e($owner->owner_code); ?></span>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <div class="flex items-center justify-between pt-2">
-                    <span class="text-sm text-slate-500">Role: <strong class="text-slate-700 capitalize">{{ $user->role }}</strong></span>
+                    <span class="text-sm text-slate-500">Role: <strong class="text-slate-700 capitalize"><?php echo e($user->role); ?></strong></span>
                     <button
                         type="submit"
                         class="rounded-xl bg-green-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500/50"
@@ -151,22 +184,22 @@
             </form>
         </div>
 
-        {{-- Update Password --}}
+        
         <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <h3 class="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-green-700 mb-2">
                 <span>🔒</span> Update Password
             </h3>
             <p class="text-sm text-slate-500 mb-6">Use a strong, unique password to keep your account secure.</p>
 
-            @if (session('status') === 'password-updated')
+            <?php if(session('status') === 'password-updated'): ?>
                 <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800 shadow-sm">
                     <span class="mr-2">✅</span>Password updated successfully.
                 </div>
-            @endif
+            <?php endif; ?>
 
-            <form method="POST" action="{{ route('password.update') }}" class="space-y-5">
-                @csrf
-                @method('put')
+            <form method="POST" action="<?php echo e(route('password.update')); ?>" class="space-y-5">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('put'); ?>
 
                 <div>
                     <label for="current_password" class="block text-sm font-medium text-slate-700">Current Password</label>
@@ -178,9 +211,16 @@
                         placeholder="••••••••"
                         class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                     />
-                    @error('current_password', 'updatePassword')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['current_password', 'updatePassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div>
@@ -193,9 +233,16 @@
                         placeholder="••••••••"
                         class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                     />
-                    @error('password', 'updatePassword')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['password', 'updatePassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div>
@@ -208,9 +255,16 @@
                         placeholder="••••••••"
                         class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                     />
-                    @error('password_confirmation', 'updatePassword')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['password_confirmation', 'updatePassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div class="flex justify-end pt-2">
@@ -224,7 +278,7 @@
             </form>
         </div>
 
-        {{-- Delete Account --}}
+        
         <div class="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
             <h3 class="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-red-600 mb-2">
                 <span>⚠️</span> Delete Account
@@ -243,7 +297,7 @@
         </div>
     </div>
 
-    {{-- Delete Account Modal --}}
+    
     <div id="delete-account-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm">
         <div class="mx-4 w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl">
             <div class="text-center mb-6">
@@ -254,9 +308,9 @@
                 </p>
             </div>
 
-            <form method="POST" action="{{ route('profile.destroy') }}" class="space-y-4">
-                @csrf
-                @method('delete')
+            <form method="POST" action="<?php echo e(route('profile.destroy')); ?>" class="space-y-4">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('delete'); ?>
 
                 <div>
                     <label for="delete-password" class="block text-sm font-medium text-slate-700">Password</label>
@@ -268,9 +322,9 @@
                         placeholder="Enter your password"
                         class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                     />
-                    @if ($errors->userDeletion->has('password'))
-                        <p class="mt-1 text-xs text-red-600">{{ $errors->userDeletion->first('password') }}</p>
-                    @endif
+                    <?php if($errors->userDeletion->has('password')): ?>
+                        <p class="mt-1 text-xs text-red-600"><?php echo e($errors->userDeletion->first('password')); ?></p>
+                    <?php endif; ?>
                 </div>
 
                 <div class="flex gap-3 pt-2">
@@ -292,11 +346,13 @@
         </div>
     </div>
 
-    {{-- Auto-open delete modal if there were deletion errors --}}
-    @if ($errors->userDeletion->isNotEmpty())
+    
+    <?php if($errors->userDeletion->isNotEmpty()): ?>
         <script>
             document.getElementById('delete-account-modal').classList.remove('hidden');
             document.getElementById('delete-account-modal').classList.add('flex');
         </script>
-    @endif
-@endsection
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\hp\Desktop\livestock\livestock\resources\views/profile/edit.blade.php ENDPATH**/ ?>

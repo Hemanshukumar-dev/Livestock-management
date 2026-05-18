@@ -1,271 +1,301 @@
-# Task Breakdown: Livestock Ownership Database System
+Livestock Ownership Database System — Remaining Task Breakdown
+Current Project Status
+
+The project currently includes:
+
+Authentication system
+Google OAuth login
+Admin and owner roles
+Owner management
+Livestock management
+Health/event history
+Dashboard analytics
+Search and filter systems
+Responsive layouts
+Role-based access control
+
+The remaining work focuses on:
+
+UI/UX optimization
+Workflow improvement
+Mandatory academic features
+Deployment readiness
+Phase 1 — Admin UI/UX Optimization
+Goal
+
+Improve scalability, usability, and professional appearance of admin-facing screens.
+
+1.1 Optimize Admin Dashboard Layout
+Problems
+Dashboard cards are oversized
+Too much empty whitespace
+Information density is low
+Tasks
+Reduce card padding and height
+Create compact metric cards
+Improve spacing consistency
+Reduce unnecessary vertical scrolling
+Make dashboard visually balanced
+Expected Result
+
+A compact modern admin dashboard suitable for managing large datasets.
+
+1.2 Redesign Owners Page
+Problems
+Each livestock record renders as a full card
+Page becomes too large with many animals
+Difficult to scan owner information quickly
+Tasks
+Convert owners page into structured layout
+Show owner summary first:
+Name
+Owner code
+Phone
+Address
+Total livestock count
+Add expandable/collapsible livestock section
+OR
+Add “View Details” button for each owner
+Reduce livestock card size
+Improve readability and scalability
+Expected Result
+
+Owners page remains clean even if an owner has 100+ livestock records.
+
+1.3 Improve Edit Owner Workflow
+Problems
+Every livestock edit form is expanded vertically
+Difficult to manage multiple animals
+Page becomes extremely long
+Tasks
+Replace large livestock forms with compact editable cards/table
+Add:
+Edit button
+Delete button
+Quick actions
+Open livestock edit section individually
+Keep owner details separate from livestock editing
+Expected Result
+
+Efficient editing workflow for large livestock datasets.
+
+1.4 Improve Navigation Consistency
+Tasks
+Remove duplicate navigation actions
+Keep navbar minimal
+Ensure consistent button styles
+Maintain role-based navigation separation
+Expected Result
+
+Cleaner and easier navigation experience.
+
+Phase 2 — Livestock System Polish
+Goal
+
+Improve livestock management quality and usability.
+
+2.1 Improve Livestock Listing UX
+Tasks
+Reduce row/card size
+Improve table readability
+Add compact health badges
+Improve mobile responsiveness
+Expected Result
 
-## 1. Overview
+Cleaner livestock browsing experience.
 
-This document defines the exact step-by-step implementation plan for building the system.
+2.2 Improve Search & Filter Accuracy
+Tasks
+Ensure breed list changes dynamically based on selected animal type
+Ensure filters combine correctly
+Improve reset/clear functionality
+Prevent invalid breed/type combinations
+Expected Result
+
+Accurate livestock filtering system.
+
+2.3 Improve Livestock Detail Pages
+Tasks
+Improve livestock profile page layout
+Display:
+Full animal details
+Owner information
+Health history timeline
+Treatment history
+Event logs
+Expected Result
+
+Complete livestock record tracking system.
+
+2.4 Improve Health/Event History System
+Tasks
+Keep edit/delete event functionality
+Add confirmation modal before deletion
+Improve event timeline UI
+Add empty-state handling
+Expected Result
 
-Each step should be executed sequentially.
-Do NOT skip steps.
+Professional health history management system.
+
+Phase 3 — Government Schemes Module
+Goal
+
+Add livestock-related government schemes feature for farmers.
 
----
+3.1 Create Schemes Database
+Tasks
 
-## 2. Phase 1: Project Setup
+Create schemes table with:
 
-### Step 1.1: Initialize Laravel Project
+title
+category
+animal_type
+scheme_type (state/central)
+eligibility
+benefits
+deadline
+apply_link
+description
+Expected Result
 
-* Ensure Laravel project is installed and running
-* Configure `.env` file:
+Structured scheme management system.
 
-  * Set database name
-  * Set DB username and password
+3.2 Create Admin Scheme Management
+Tasks
 
-### Step 1.2: Setup Database Connection
+Admin should be able to:
 
-* Create MySQL database (e.g., livestock_db)
-* Run initial migration:
+Add scheme
+Edit scheme
+Delete scheme
+View all schemes
+Expected Result
 
-```bash
-php artisan migrate
-```
+Admin-controlled schemes module.
 
----
+3.3 Create Farmer Schemes Page
+Tasks
 
-## 3. Phase 2: Database Implementation
+Owners/farmers should be able to:
 
-### Step 2.1: Create Migrations
+Browse schemes
+Search schemes
+Filter schemes by:
+Animal type
+Scheme category
+State/Central
+Expected Result
 
-Generate migrations for:
+Farmer-friendly schemes access system.
 
-* owners table
-* livestock table
+3.4 Add Dashboard Scheme Highlights
+Tasks
 
-Command:
+Show featured schemes on owner dashboard:
 
-```bash
-php artisan make:migration create_owners_table
-php artisan make:migration create_livestock_table
-```
+Recommended schemes
+Recently added schemes
+Important deadlines
+Expected Result
 
----
+Farmers can quickly discover useful government programs.
 
-### Step 2.2: Define Schema
+Phase 4 — UI/UX Refinement
+Goal
 
-* Implement fields as defined in `database-schema.md`
+Make the system look authentic, usable, and production-ready.
 
-* Add foreign keys:
+4.1 Improve Visual Design
+Tasks
+Reduce “AI-generated” appearance
+Use more natural spacing and layouts
+Improve typography hierarchy
+Use softer colors
+Improve component consistency
+Expected Result
 
-  * owners.user_id → users.id
-  * livestock.owner_id → owners.id
+More human and trustworthy interface.
 
-* Add cascade delete rules
+4.2 Farmer-Friendly UX Improvements
+Tasks
+Use simpler labels
+Improve readability
+Increase button clarity
+Ensure mobile usability
+Avoid cluttered layouts
+Expected Result
 
----
+Easy-to-use system for non-technical users.
 
-### Step 2.3: Run Migrations
+4.3 Add Proper Empty States & Alerts
+Tasks
 
-```bash
-php artisan migrate
-```
+Add:
 
----
+Success alerts
+Error alerts
+Empty data states
+Loading states
+Delete confirmations
+Expected Result
 
-## 4. Phase 3: Model Creation
+More polished application experience.
 
-### Step 3.1: Create Models
+Phase 5 — Deployment Readiness
+Goal
 
-```bash
-php artisan make:model Owner
-php artisan make:model Livestock
-```
+Prepare project for production deployment.
 
----
+5.1 Final Testing
+Tasks
 
-### Step 3.2: Define Relationships
+Test:
 
-Implement relationships as per `relationships.md`:
+Authentication
+Google OAuth
+CRUD operations
+Filters
+Responsive layouts
+Role restrictions
+Expected Result
 
-* User → hasOne Owner
-* Owner → belongsTo User
-* Owner → hasMany Livestock
-* Livestock → belongsTo Owner
+Stable production-ready system.
 
----
+5.2 Deployment Configuration
+Tasks
 
-## 5. Phase 4: Authentication Setup
+Prepare:
 
-### Step 4.1: Install Laravel Auth
+.env
+database configuration
+Google OAuth production credentials
+asset build process
+Expected Result
 
-Use Laravel Breeze:
+Deployment-ready Laravel application.
 
-```bash
-composer require laravel/breeze --dev
-php artisan breeze:install
-npm install && npm run dev
-php artisan migrate
-```
+5.3 Production Deployment
+Tasks
 
----
+Deploy:
 
-### Step 4.2: Add Role Field
+Laravel backend
+MySQL database
+Tailwind/Vite assets
+Expected Result
 
-* Modify users table to include:
+Publicly accessible livestock management system.
 
-  * role (admin / owner)
+Features Explicitly Deferred
 
-* Set default role = owner
+These features are intentionally postponed:
 
----
+QR generation
+AI recommendations
+IoT integration
+Notifications
+PDF exports
+Image uploads
+Live government APIs
 
-### Step 4.3: Create Admin User (Manual or Seeder)
-
----
-
-## 6. Phase 5: Middleware Setup
-
-### Step 5.1: Create Role Middleware
-
-Commands:
-
-```bash
-php artisan make:middleware IsAdmin
-php artisan make:middleware IsOwner
-```
-
-### Step 5.2: Implement Logic
-
-* IsAdmin → allow only admin users
-* IsOwner → allow only owner users
-
-### Step 5.3: Register Middleware in Kernel
-
----
-
-## 7. Phase 6: Controller Implementation
-
-### Step 6.1: Create Controllers
-
-```bash
-php artisan make:controller OwnerController --resource
-php artisan make:controller LivestockController --resource
-php artisan make:controller DashboardController
-```
-
----
-
-### Step 6.2: Implement OwnerController
-
-* index → list owners
-* create → show form
-* store → save owner
-* edit → show edit form
-* update → update owner
-* destroy → delete owner
-
----
-
-### Step 6.3: Implement LivestockController
-
-* index → role-based filtering
-* create → form (admin vs owner logic)
-* store → assign owner_id correctly
-* update → enforce ownership rules
-* destroy → enforce ownership rules
-
----
-
-### Step 6.4: Implement DashboardController
-
-* Show:
-
-  * total owners
-  * total livestock
-  * role-based filtering
-
----
-
-## 8. Phase 7: Routes Setup
-
-* Define routes as per `routes-spec.md`
-* Apply middleware:
-
-  * auth
-  * isAdmin
-
----
-
-## 9. Phase 8: View Implementation (Blade)
-
-### Step 8.1: Layout
-
-* Create main layout file
-
-### Step 8.2: Pages
-
-* dashboard.blade.php
-* owners/
-
-  * index.blade.php
-  * create.blade.php
-  * edit.blade.php
-* livestock/
-
-  * index.blade.php
-  * create.blade.php
-  * edit.blade.php
-
----
-
-### Step 8.3: Conditional UI
-
-* Show/hide elements based on role
-
----
-
-## 10. Phase 9: Validation & Error Handling
-
-* Add validation in controllers
-* Display errors in Blade views
-
----
-
-## 11. Phase 10: Testing
-
-Test all flows:
-
-* Auth (login/register)
-* Owner CRUD
-* Livestock CRUD
-* Role restrictions
-* Dashboard data
-
----
-
-## 12. Phase 11: Final Cleanup
-
-* Remove debug code
-* Ensure proper redirects
-* Check UI consistency
-
----
-
-## 13. Execution Rules
-
-* Follow steps in order
-* Do not implement advanced features before MVP is complete
-* Always refer to:
-
-  * database-schema.md
-  * relationships.md
-  * routes-spec.md
-  * rules.md
-
----
-
-## 14. Output Expectation
-
-At the end of execution:
-
-* Fully working Laravel application
-* Proper CRUD functionality
-* Role-based access control
-* Clean UI with Blade + Tailwind
+These are enhancement-level features and not mandatory for the academic project scope.

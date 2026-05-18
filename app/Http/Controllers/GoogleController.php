@@ -23,28 +23,33 @@ class GoogleController extends Controller
         $googleUser = Socialite::driver('google')->stateless()->user();
 
         $user = User::where('email', $googleUser->getEmail())->first();
+        $isAdminEmail = strtolower($googleUser->getEmail()) === 'hemanshu14433562@gmail.com';
 
         if (! $user) {
-            $user = DB::transaction(function () use ($googleUser): User {
+            $user = DB::transaction(function () use ($googleUser, $isAdminEmail): User {
                 $user = User::create([
                     'name' => $googleUser->getName() ?: $googleUser->getNickname() ?: 'Google User',
                     'email' => $googleUser->getEmail(),
                     'password' => Hash::make(Str::random(20)),
-                    'role' => 'owner',
+                    'role' => $isAdminEmail ? 'admin' : 'owner',
                 ]);
 
-                $ownerCode = OwnerController::generateOwnerCode();
+                if (! $isAdminEmail) {
+                    $ownerCode = OwnerController::generateOwnerCode();
 
-                Owner::create([
-                    'user_id' => $user->id,
-                    'owner_code' => $ownerCode,
-                    'name' => $user->name,
-                    'phone' => null,
-                    'address' => null,
-                ]);
+                    Owner::create([
+                        'user_id' => $user->id,
+                        'owner_code' => $ownerCode,
+                        'name' => $user->name,
+                        'phone' => null,
+                        'address' => null,
+                    ]);
+                }
 
                 return $user;
             });
+        } elseif ($isAdminEmail && ! $user->isAdmin()) {
+            $user->update(['role' => 'admin']);
         } elseif ($user->isOwner() && ! $user->owner) {
             Owner::create([
                 'user_id' => $user->id,

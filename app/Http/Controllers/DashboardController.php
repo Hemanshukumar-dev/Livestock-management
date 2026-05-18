@@ -26,11 +26,15 @@ class DashboardController extends Controller
             ->orderByDesc('count')
             ->get();
 
+        // Featured Schemes
+        $featuredSchemes = \App\Models\Scheme::latest()->take(3)->get();
+
         return view('dashboard.index', compact(
             'totalOwners',
             'totalLivestock',
             'livestockByType',
-            'livestockByStatus'
+            'livestockByStatus',
+            'featuredSchemes'
         ));
     }
 }

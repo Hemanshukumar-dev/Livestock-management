@@ -78,7 +78,8 @@ class OwnerController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate($this->validationRules());
+        $rules = array_merge($this->ownerValidationRules(), $this->livestockValidationRules());
+        $validated = $request->validate($rules);
         $passwordPlain = Str::random(10);
         $credentials = null;
 
@@ -124,7 +125,7 @@ class OwnerController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $validated = $request->validate($this->validationRules());
+        $validated = $request->validate($this->ownerValidationRules());
 
         DB::transaction(function () use ($validated, $id): void {
             $owner = Owner::findOrFail($id);
@@ -138,26 +139,11 @@ class OwnerController extends Controller
                     'name' => $validated['owner']['name'],
                 ]);
             }
-
-            // Delete existing livestock and recreate
-            $owner->livestock()->delete();
-
-            foreach ($validated['livestock'] as $animal) {
-                $owner->livestock()->create([
-                    'type' => $animal['type'],
-                    'breed' => $animal['breed'] ?? null,
-                    'age' => $animal['age'] ?? null,
-                    'health_status' => $animal['health_status'] ?? 'Healthy',
-                    'tag_number' => $animal['tag_number'],
-                    'source' => $animal['source'] ?? 'Born',
-                    'date_added' => $animal['date_added'] ?? null,
-                ]);
-            }
         });
 
         return redirect()
             ->route('owners.index')
-            ->with('success', 'Owner and livestock updated successfully.');
+            ->with('success', 'Owner details updated successfully.');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -178,12 +164,19 @@ class OwnerController extends Controller
             ->with('success', 'Owner deleted successfully.');
     }
 
-    private function validationRules(): array
+    private function ownerValidationRules(): array
     {
         return [
             'owner.name' => ['required', 'string', 'max:255'],
             'owner.phone' => ['required', 'string', 'max:255'],
             'owner.address' => ['required', 'string'],
+            'owner.state' => ['nullable', 'string'],
+        ];
+    }
+
+    private function livestockValidationRules(): array
+    {
+        return [
             'livestock' => ['required', 'array', 'min:1'],
             'livestock.*.type' => ['required', 'string', 'max:255'],
             'livestock.*.breed' => ['nullable', 'string', 'max:255'],

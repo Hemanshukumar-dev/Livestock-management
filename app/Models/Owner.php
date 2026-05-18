@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Owner extends Model
 {
     // Allow mass assignment
-    protected $fillable = ['user_id', 'owner_code', 'name', 'phone', 'address'];
+    protected $fillable = ['user_id', 'owner_code', 'name', 'phone', 'address', 'state'];
 
     public function user()
     {

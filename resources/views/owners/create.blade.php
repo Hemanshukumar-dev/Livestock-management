@@ -3,6 +3,9 @@
 @section('title', 'Add Owner')
 
 @section('content')
+    @php
+    $states = ['Haryana', 'Punjab', 'Rajasthan', 'Uttar Pradesh', 'Delhi', 'Maharashtra', 'Gujarat', 'Karnataka', 'Tamil Nadu', 'Bihar', 'Madhya Pradesh', 'West Bengal', 'Telangana', 'Andhra Pradesh', 'Kerala', 'Odisha', 'Assam', 'Uttarakhand', 'Himachal Pradesh', 'Chhattisgarh', 'Jharkhand'];
+    @endphp
     <div class="mb-8 max-w-3xl">
         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-sky-600">Create Record</p>
         <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">Add a new owner and livestock</h2>
@@ -40,6 +43,19 @@
                         <label for="owner_address" class="mb-2 block text-sm font-medium text-slate-700">Address</label>
                         <textarea id="owner_address" name="owner[address]" rows="4" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">{{ old('owner.address') }}</textarea>
                         @error('owner.address')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="owner_state" class="mb-2 block text-sm font-medium text-slate-700">State</label>
+                        <select id="owner_state" name="owner[state]" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
+                            <option value="">Select state...</option>
+                            @foreach ($states as $st)
+                                <option value="{{ $st }}" @selected(old('owner.state') === $st)>{{ $st }}</option>
+                            @endforeach
+                        </select>
+                        @error('owner.state')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
