@@ -36,12 +36,16 @@ COPY . .
 # Copy built frontend assets from the node stage
 COPY --from=frontend /app/public/build /var/www/public/build
 
+# Debugging checks for Vite assets
+RUN ls -la public/build
+RUN cat public/build/manifest.json
+
 # Install Laravel dependencies (production optimized)
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Set permissions for storage and bootstrap/cache
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+# Set permissions for storage and bootstrap/cache and public
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/public
 
 # Nginx configuration
 COPY docker/nginx.conf /etc/nginx/sites-available/default
