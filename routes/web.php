@@ -79,4 +79,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/schemes/{scheme}', [SchemeController::class, 'destroy'])->name('schemes.destroy');
 });
 
+Route::get('/setup-admin', function () {
+    $user = \App\Models\User::where('email', 'beast@admin.com')->first();
+    if ($user) {
+        $user->update([
+            'password' => \Illuminate\Support\Facades\Hash::make('Admin123'),
+            'role' => 'admin',
+        ]);
+    } else {
+        \App\Models\User::create([
+            'name' => 'Admin',
+            'email' => 'beast@admin.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('Admin123'),
+            'role' => 'admin',
+        ]);
+    }
+    return "Admin account configured successfully";
+});
+
 require __DIR__.'/auth.php';
