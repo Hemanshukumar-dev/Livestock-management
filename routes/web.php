@@ -79,42 +79,5 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/schemes/{scheme}', [SchemeController::class, 'destroy'])->name('schemes.destroy');
 });
 
-Route::get('/setup-admin', function () {
-    $user = \App\Models\User::where('email', 'beast@admin.com')->first();
-    
-    // 5. Add temporary logging to confirm
-    \Illuminate\Support\Facades\Log::info('--- /setup-admin started ---');
-
-    if ($user) {
-        $user->update([
-            'password' => 'Admin123', // Removed Hash::make() to prevent double hashing
-            'role' => 'admin',
-        ]);
-        \Illuminate\Support\Facades\Log::info('Admin user updated (user exists).');
-    } else {
-        $user = \App\Models\User::create([
-            'name' => 'Admin',
-            'email' => 'beast@admin.com',
-            'password' => 'Admin123', // Removed Hash::make() to prevent double hashing
-            'role' => 'admin',
-        ]);
-        \Illuminate\Support\Facades\Log::info('Admin user created.');
-    }
-    
-    // Reload user to get fresh attributes
-    $user->refresh();
-    
-    // Check if user exists
-    \Illuminate\Support\Facades\Log::info('User exists: ' . ($user ? 'Yes' : 'No'));
-    // Check if password hash exists
-    \Illuminate\Support\Facades\Log::info('Password hash exists: ' . (!empty($user->password) ? 'Yes' : 'No'));
-    \Illuminate\Support\Facades\Log::info('Current Hash in DB: ' . $user->password);
-    
-    // Check if Hash::check() passes
-    $hashCheck = \Illuminate\Support\Facades\Hash::check('Admin123', $user->password);
-    \Illuminate\Support\Facades\Log::info('Hash::check() passes: ' . ($hashCheck ? 'Yes' : 'No'));
-
-    return "Admin account configured successfully. Hash check passed: " . ($hashCheck ? 'Yes' : 'No');
-});
 
 require __DIR__.'/auth.php';

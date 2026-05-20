@@ -52,25 +52,13 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $email = $this->input('email');
-        \Illuminate\Support\Facades\Log::info('--- Login Attempt ---');
-        \Illuminate\Support\Facades\Log::info('Incoming Email: ' . $email);
-        
-        $user = \App\Models\User::where('email', $email)->first();
-        \Illuminate\Support\Facades\Log::info('User exists: ' . ($user ? 'Yes' : 'No'));
-        
-        $attemptResult = Auth::attempt($this->only('email', 'password'), $this->boolean('remember'));
-        \Illuminate\Support\Facades\Log::info('Auth::attempt() returned: ' . ($attemptResult ? 'True' : 'False'));
-
-        if (! $attemptResult) {
+        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
         }
-
-        \Illuminate\Support\Facades\Log::info('Authenticated User Role: ' . Auth::user()->role);
 
         RateLimiter::clear($this->throttleKey());
     }

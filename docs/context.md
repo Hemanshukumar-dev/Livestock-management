@@ -158,6 +158,7 @@ The application uses a unified, dynamic navbar (`layouts/app.blade.php`) that ad
 - **Session Security**: Added `SESSION_SECURE_COOKIE` and `SESSION_SAME_SITE=lax` configurations for secure cookie handling in production.
 - **Form Autofill & Warnings**: Fixed browser "This form is not secure. Autofill has been turned off." warnings by ensuring correct autocomplete attributes (`email`, `new-password`, `tel`, `street-address`) across login, register, and profile completion forms.
 - **Blade Template Fixes**: Resolved layout structure issues in `resources/views/profile/complete.blade.php` by properly structuring `@extends` and `@section('content')`.
+- **Production Debugging Cleanup**: Removed temporary `/setup-admin` route and authentication debugging logs. Final production authentication flow stabilized with lowercase email normalization for PostgreSQL.
 - **Production Status**: Successfully deployed to Render using a multi-stage Docker build with a Neon PostgreSQL database. Fully functional for real-world usage.
 
 ---

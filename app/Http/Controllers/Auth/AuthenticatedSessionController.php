@@ -24,18 +24,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        \Illuminate\Support\Facades\Log::info('LoginRequest validation passed, attempting to authenticate...');
         $request->authenticate();
-        \Illuminate\Support\Facades\Log::info('User authenticated successfully. ID: ' . $request->user()->id);
 
         $request->session()->regenerate();
-        \Illuminate\Support\Facades\Log::info('Session regenerated. Session ID: ' . $request->session()->getId());
 
         $destination = $request->user()->isAdmin()
             ? route('dashboard', absolute: false)
             : route('owner.dashboard', absolute: false);
 
-        \Illuminate\Support\Facades\Log::info('Redirecting user to: ' . $destination);
         return redirect()->intended($destination);
     }
 
