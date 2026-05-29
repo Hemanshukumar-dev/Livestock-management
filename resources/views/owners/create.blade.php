@@ -8,24 +8,24 @@
     @endphp
     <div class="mb-8 max-w-3xl">
         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-sky-600">Create Record</p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">Add a new owner and livestock</h2>
-        <p class="mt-2 text-sm leading-6 text-slate-600">Enter the owner profile and add one or more livestock records in one submission.</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-txt-100">Add a new owner and livestock</h2>
+        <p class="mt-2 text-sm leading-6 text-txt-200">Enter the owner profile and add one or more livestock records in one submission.</p>
     </div>
 
-    <form method="POST" action="{{ route('owners.store') }}" class="max-w-4xl space-y-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <form method="POST" action="{{ route('owners.store') }}" class="max-w-4xl space-y-8 rounded-3xl border border-bg-300 bg-bg-100 p-6 shadow-sm sm:p-8">
         @csrf
 
         <div class="grid gap-8 lg:grid-cols-2">
             <section>
                 <div class="mb-5 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-slate-900">Owner details</h3>
+                    <h3 class="text-lg font-semibold text-txt-100">Owner details</h3>
                     <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Required</span>
                 </div>
 
                 <div class="space-y-5">
                     <div>
                         <label for="owner_name" class="mb-2 block text-sm font-medium text-slate-700">Name</label>
-                        <input id="owner_name" name="owner[name]" type="text" value="{{ old('owner.name') }}" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
+                        <input id="owner_name" name="owner[name]" type="text" value="{{ old('owner.name') }}" class="w-full rounded-2xl border border-bg-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
                         @error('owner.name')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -33,7 +33,7 @@
 
                     <div>
                         <label for="owner_phone" class="mb-2 block text-sm font-medium text-slate-700">Phone</label>
-                        <input id="owner_phone" name="owner[phone]" type="text" value="{{ old('owner.phone') }}" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
+                        <input id="owner_phone" name="owner[phone]" type="text" value="{{ old('owner.phone') }}" class="w-full rounded-2xl border border-bg-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
                         @error('owner.phone')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -41,7 +41,7 @@
 
                     <div>
                         <label for="owner_address" class="mb-2 block text-sm font-medium text-slate-700">Address</label>
-                        <textarea id="owner_address" name="owner[address]" rows="4" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">{{ old('owner.address') }}</textarea>
+                        <textarea id="owner_address" name="owner[address]" rows="4" class="w-full rounded-2xl border border-bg-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">{{ old('owner.address') }}</textarea>
                         @error('owner.address')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -49,7 +49,7 @@
 
                     <div>
                         <label for="owner_state" class="mb-2 block text-sm font-medium text-slate-700">State</label>
-                        <select id="owner_state" name="owner[state]" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
+                        <select id="owner_state" name="owner[state]" class="w-full rounded-2xl border border-bg-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100">
                             <option value="">Select state...</option>
                             @foreach ($states as $st)
                                 <option value="{{ $st }}" @selected(old('owner.state') === $st)>{{ $st }}</option>
@@ -64,13 +64,13 @@
 
             <section>
                 <div class="mb-5 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-slate-900">Livestock</h3>
+                    <h3 class="text-lg font-semibold text-txt-100">Livestock</h3>
                     <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Multiple entries</span>
                 </div>
 
                 <div id="livestock-container" class="space-y-4">
                     <!-- Initial livestock entry -->
-                    <div class="livestockEntry rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div class="livestockEntry rounded-2xl border border-bg-300 bg-bg-200 p-4">
                         <div class="mb-4 flex items-center justify-between">
                             <p class="text-sm font-medium text-slate-700">Livestock #<span class="livestockNumber">1</span></p>
                             <button type="button" class="removeBtn hidden text-xs font-semibold text-red-600 transition hover:text-red-700">Remove</button>
@@ -79,7 +79,7 @@
                         <div class="space-y-3">
                                 <div>
                                     <label class="mb-2 block text-sm font-medium text-slate-700">Type</label>
-                                    <select name="livestock[0][type]" class="typeSelect w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                    <select name="livestock[0][type]" class="typeSelect w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                         <option value="">Select type</option>
                                         <option value="Cow" @selected(old('livestock.0.type') === 'Cow')>Cow</option>
                                         <option value="Buffalo" @selected(old('livestock.0.type') === 'Buffalo')>Buffalo</option>
@@ -95,7 +95,7 @@
                             <div class="grid gap-3 sm:grid-cols-2">
                                 <div>
                                     <label class="mb-2 block text-sm font-medium text-slate-700">Breed</label>
-                                    <select name="livestock[0][breed]" class="breedSelect w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                    <select name="livestock[0][breed]" class="breedSelect w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                         <option value="">Select breed</option>
                                     </select>
                                     @error('livestock.0.breed')
@@ -105,7 +105,7 @@
 
                                 <div>
                                     <label class="mb-2 block text-sm font-medium text-slate-700">Age</label>
-                                    <input name="livestock[0][age]" type="number" min="0" value="{{ old('livestock.0.age') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                    <input name="livestock[0][age]" type="number" min="0" value="{{ old('livestock.0.age') }}" class="w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                     @error('livestock.0.age')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -114,7 +114,7 @@
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-700">Tag Number</label>
-                                <input name="livestock[0][tag_number]" type="text" value="{{ old('livestock.0.tag_number') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                <input name="livestock[0][tag_number]" type="text" value="{{ old('livestock.0.tag_number') }}" class="w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                 @error('livestock.0.tag_number')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -122,7 +122,7 @@
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-700">Health Status</label>
-                                <select name="livestock[0][health_status]" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                <select name="livestock[0][health_status]" class="w-full rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                     <option value="">Select status</option>
                                     <option value="Healthy" @selected(old('livestock.0.health_status') === 'Healthy')>Healthy</option>
                                     <option value="Sick" @selected(old('livestock.0.health_status') === 'Sick')>Sick</option>
@@ -138,7 +138,7 @@
                             <div class="grid gap-3 sm:grid-cols-2">
                                 <div>
                                     <label class="mb-2 block text-sm font-medium text-slate-700">Source</label>
-                                    <select name="livestock[0][source]" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                    <select name="livestock[0][source]" class="w-full rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                         <option value="Born" @selected(old('livestock.0.source') === 'Born')>Born</option>
                                         <option value="Purchased" @selected(old('livestock.0.source') === 'Purchased')>Purchased</option>
                                     </select>
@@ -149,7 +149,7 @@
 
                                 <div>
                                     <label class="mb-2 block text-sm font-medium text-slate-700">Date Added</label>
-                                    <input name="livestock[0][date_added]" type="date" value="{{ old('livestock.0.date_added') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                    <input name="livestock[0][date_added]" type="date" value="{{ old('livestock.0.date_added') }}" class="w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                     @error('livestock.0.date_added')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -176,8 +176,8 @@
         @endif
 
         <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-            <a href="{{ route('owners.index') }}" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50">Cancel</a>
-            <button type="submit" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-700">
+            <a href="{{ route('owners.index') }}" class="inline-flex items-center justify-center rounded-full border border-bg-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-bg-200">Cancel</a>
+            <button type="submit" class="inline-flex items-center justify-center rounded-full bg-bg-100 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-700">
                 Save Owner and Livestock
             </button>
         </div>
@@ -248,7 +248,7 @@
             addBtn.addEventListener('click', function() {
                 const index = container.querySelectorAll('.livestockEntry').length;
                 const newEntry = document.createElement('div');
-                newEntry.classList.add('livestockEntry', 'rounded-2xl', 'border', 'border-slate-200', 'bg-slate-50', 'p-4');
+                newEntry.classList.add('livestockEntry', 'rounded-2xl', 'border', 'border-bg-300', 'bg-bg-200', 'p-4');
                 newEntry.innerHTML = `
                     <div class="mb-4 flex items-center justify-between">
                         <p class="text-sm font-medium text-slate-700">Livestock #<span class="livestockNumber">${index + 1}</span></p>
@@ -258,7 +258,7 @@
                     <div class="space-y-3">
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Type</label>
-                            <select name="livestock[${index}][type]" class="typeSelect w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                            <select name="livestock[${index}][type]" class="typeSelect w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                 <option value="">Select type</option>
                                 <option value="Cow">Cow</option>
                                 <option value="Buffalo">Buffalo</option>
@@ -271,25 +271,25 @@
                         <div class="grid gap-3 sm:grid-cols-2">
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-700">Breed</label>
-                                <select name="livestock[${index}][breed]" class="breedSelect w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                <select name="livestock[${index}][breed]" class="breedSelect w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                     <option value="">Select breed</option>
                                 </select>
                             </div>
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-700">Age</label>
-                                <input name="livestock[${index}][age]" type="number" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                <input name="livestock[${index}][age]" type="number" min="0" class="w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                             </div>
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Tag Number</label>
-                            <input name="livestock[${index}][tag_number]" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                            <input name="livestock[${index}][tag_number]" type="text" class="w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Health Status</label>
-                            <select name="livestock[${index}][health_status]" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                            <select name="livestock[${index}][health_status]" class="w-full rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                 ${healthStatusOptions}
                             </select>
                         </div>
@@ -297,7 +297,7 @@
                         <div class="grid gap-3 sm:grid-cols-2">
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-700">Source</label>
-                                <select name="livestock[${index}][source]" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                <select name="livestock[${index}][source]" class="w-full rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                                     <option value="Born">Born</option>
                                     <option value="Purchased">Purchased</option>
                                 </select>
@@ -305,7 +305,7 @@
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-700">Date Added</label>
-                                <input name="livestock[${index}][date_added]" type="date" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                <input name="livestock[${index}][date_added]" type="date" class="w-full rounded-lg border border-bg-300 px-3 py-2 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
                             </div>
                         </div>
                     </div>

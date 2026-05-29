@@ -3,28 +3,28 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <span class="mb-2 inline-block rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-700/10">Administrator Panel</span>
-            <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">Admin Dashboard</h2>
-            <p class="mt-1 text-sm text-slate-600">System-wide livestock management and analytics overview</p>
+            <span class="mb-2 inline-block rounded-full bg-primary-300/10 px-3 py-1 text-xs font-semibold text-primary-300 ring-1 ring-inset ring-agri-teal/20">Administrator Panel</span>
+            <h2 class="mt-1 text-3xl font-bold tracking-tight text-txt-100">Admin Dashboard</h2>
+            <p class="mt-1 text-sm text-txt-200">System-wide livestock management and analytics overview</p>
         </div>
-        <a href="{{ route('owners.index') }}" class="inline-flex shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800">
+        <a href="{{ route('owners.index') }}" class="inline-flex shrink-0 rounded-lg bg-bg-200 px-4 py-2.5 text-xs font-semibold text-txt-100 transition hover:hover:bg-primary-100/20 border border-bg-300 shadow-cinematic">
             View All Owners
         </a>
     </div>
 
     <!-- Main Stats Cards -->
-    <div class="mb-4 grid gap-3 grid-cols-2 lg:grid-cols-4">
+    <div class="mb-8 grid gap-6 grid-cols-2 lg:grid-cols-4">
         <!-- Total Owners Card -->
-        <div class="col-span-1 lg:col-span-2 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="col-span-1 lg:col-span-2 rounded-2xl border border-bg-300 bg-bg-300 p-6 shadow-cinematic transition-all hover:shadow-cinematic-hover hover:-translate-y-1">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500">Total Owners</p>
-                    <p class="text-2xl font-bold text-slate-900">{{ $totalOwners }}</p>
+                    <p class="text-xs font-medium uppercase tracking-widest text-txt-200">Total Owners</p>
+                    <p class="text-4xl font-bold text-txt-100 mt-2">{{ $totalOwners }}</p>
                 </div>
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl hover:bg-primary-100/20 text-txt-200">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20h12a6 6 0 016-6H0a6 6 0 016 6z" />
                     </svg>
                 </div>
@@ -32,14 +32,14 @@
         </div>
 
         <!-- Total Livestock Card -->
-        <div class="col-span-1 lg:col-span-2 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="col-span-1 lg:col-span-2 rounded-2xl border border-bg-300 bg-bg-300 p-6 shadow-cinematic transition-all hover:shadow-cinematic-hover hover:-translate-y-1">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500">Total Livestock</p>
-                    <p class="text-2xl font-bold text-slate-900">{{ $totalLivestock }}</p>
+                    <p class="text-xs font-medium uppercase tracking-widest text-txt-200">Total Livestock</p>
+                    <p class="text-4xl font-bold text-txt-100 mt-2">{{ $totalLivestock }}</p>
                 </div>
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl hover:bg-primary-100/20 text-txt-200">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17s4.5 10.747 10 10.747c5.5 0 10-4.998 10-10.747S17.5 6.253 12 6.253z" />
                     </svg>
                 </div>
@@ -48,91 +48,95 @@
     </div>
 
     <!-- Livestock by Type and Health Status -->
-    <div class="grid gap-3 lg:grid-cols-2">
+    <div class="grid gap-6 lg:grid-cols-2 mb-8">
         <!-- Livestock by Type -->
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="mb-3">
-                <h3 class="text-sm font-semibold text-slate-900">Livestock Types Distribution</h3>
+        <div class="rounded-2xl border border-bg-300 bg-bg-300 p-6 shadow-cinematic">
+            <div class="mb-5 border-b border-bg-300 pb-3">
+                <h3 class="text-base font-semibold text-txt-100">Livestock Types Distribution</h3>
             </div>
 
             @if ($livestockByType->isNotEmpty())
-                <div class="space-y-2.5">
+                <div class="space-y-4">
                     @foreach ($livestockByType as $item)
                         <div class="flex items-end gap-3 text-sm">
                             <div class="flex-1">
-                                <div class="flex justify-between mb-1">
-                                    <span class="font-medium text-slate-700">{{ $item->type }}</span>
-                                    <span class="text-slate-500 text-xs">{{ $item->count }} ({{ $totalLivestock ? round(($item->count / $totalLivestock) * 100) : 0 }}%)</span>
+                                <div class="flex justify-between mb-1.5">
+                                    <span class="font-medium text-txt-100">{{ $item->type }}</span>
+                                    <span class="text-txt-200 text-xs">{{ $item->count }} ({{ $totalLivestock ? round(($item->count / $totalLivestock) * 100) : 0 }}%)</span>
                                 </div>
-                                <div class="h-1.5 overflow-hidden rounded-full bg-slate-100">
-                                    <div class="h-full rounded-full bg-gradient-to-r from-sky-400 to-sky-300" style="width: {{ $totalLivestock ? ($item->count / $totalLivestock) * 100 : 0 }}%"></div>
+                                <div class="h-1.5 overflow-hidden rounded-full hover:bg-primary-100/20">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-primary-300 to-primary-200" style="width: {{ $totalLivestock ? ($item->count / $totalLivestock) * 100 : 0 }}%"></div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p class="text-sm text-slate-500">No livestock data available yet.</p>
+                <div class="rounded-xl hover:bg-primary-100/20 p-6 text-center text-sm text-txt-200 border border-bg-300">
+                    No livestock data available yet.
+                </div>
             @endif
         </div>
 
         <!-- Livestock by Health Status -->
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="mb-3">
-                <h3 class="text-sm font-semibold text-slate-900">Health Status Overview</h3>
+        <div class="rounded-2xl border border-bg-300 bg-bg-300 p-6 shadow-cinematic">
+            <div class="mb-5 border-b border-bg-300 pb-3">
+                <h3 class="text-base font-semibold text-txt-100">Health Status Overview</h3>
             </div>
 
             @if ($livestockByStatus->isNotEmpty())
-                <div class="space-y-2.5">
+                <div class="space-y-3">
                     @foreach ($livestockByStatus as $item)
-                        <div class="flex items-center justify-between text-sm">
-                            <div class="flex items-center gap-2">
+                        <div class="flex items-center justify-between text-sm rounded-xl p-3 bg-bg-300 border border-bg-300 transition-colors hover:hover:bg-primary-100/20">
+                            <div class="flex items-center gap-3">
                                 @php
                                     $healthDot = match ($item->health_status) {
-                                        'Healthy' => 'bg-emerald-500',
-                                        'Sick' => 'bg-red-500',
-                                        'Under Treatment' => 'bg-yellow-500',
-                                        'Hospitalized' => 'bg-slate-500',
-                                        'Injured' => 'bg-amber-500',
-                                        default => 'bg-slate-300',
+                                        'Healthy' => 'bg-status-success',
+                                        'Sick' => 'bg-status-danger',
+                                        'Under Treatment' => 'bg-status-warning',
+                                        'Hospitalized' => 'bg-txt-200',
+                                        'Injured' => 'bg-status-warning',
+                                        default => 'bg-txt-200',
                                     };
                                 @endphp
-                                <span class="h-2 w-2 rounded-full {{ $healthDot }}"></span>
-                                <span class="font-medium text-slate-700">{{ $item->health_status }}</span>
+                                <span class="h-2.5 w-2.5 rounded-full {{ $healthDot }} shadow-sm"></span>
+                                <span class="font-medium text-txt-100">{{ $item->health_status }}</span>
                             </div>
-                            <div class="text-slate-600 text-xs font-medium">
-                                {{ $item->count }} <span class="text-slate-400 ml-1">({{ $totalLivestock ? round(($item->count / $totalLivestock) * 100) : 0 }}%)</span>
+                            <div class="text-txt-100 text-sm font-bold">
+                                {{ $item->count }} <span class="text-txt-200 ml-1 font-normal text-xs">({{ $totalLivestock ? round(($item->count / $totalLivestock) * 100) : 0 }}%)</span>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p class="text-sm text-slate-500">No livestock data available yet.</p>
+                <div class="rounded-xl hover:bg-primary-100/20 p-6 text-center text-sm text-txt-200 border border-bg-300">
+                    No livestock data available yet.
+                </div>
             @endif
         </div>
     </div>
 
     <!-- Featured Schemes -->
     <div class="mt-4">
-        <div class="mb-3 flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-slate-900">Featured Schemes</h3>
-            <a href="{{ route('schemes.index') }}" class="text-xs font-semibold text-sky-600 hover:text-sky-700">View All →</a>
+        <div class="mb-5 flex items-center justify-between border-b border-bg-300 pb-3">
+            <h3 class="text-base font-semibold text-txt-100">Featured Schemes</h3>
+            <a href="{{ route('schemes.index') }}" class="text-xs font-semibold text-primary-300 hover:text-primary-200 transition-colors">View All →</a>
         </div>
         
         @if ($featuredSchemes->isEmpty())
-            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+            <div class="rounded-xl hover:bg-primary-100/20 p-8 text-center text-sm text-txt-200 border border-bg-300">
                 No schemes available.
             </div>
         @else
-            <div class="grid gap-3 md:grid-cols-3">
+            <div class="grid gap-6 md:grid-cols-3">
                 @foreach ($featuredSchemes as $scheme)
-                    <a href="{{ route('schemes.show', $scheme) }}" class="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-sky-200 hover:shadow-md">
-                        <div class="mb-2 flex items-center justify-between">
-                            <span class="inline-flex rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700">{{ $scheme->scheme_type }}</span>
-                            <span class="text-xs text-slate-500">{{ $scheme->category }}</span>
+                    <a href="{{ route('schemes.show', $scheme) }}" class="group block rounded-2xl border border-bg-300 bg-bg-300 p-5 shadow-cinematic transition-all duration-300 hover:-translate-y-1 hover:shadow-cinematic-hover hover:border-primary-300/50">
+                        <div class="mb-4 flex items-center justify-between">
+                            <span class="inline-flex rounded-full bg-primary-200 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-bg-100">{{ $scheme->scheme_type }}</span>
+                            <span class="text-xs font-medium text-txt-200">{{ $scheme->category }}</span>
                         </div>
-                        <h4 class="font-semibold text-slate-900 group-hover:text-sky-700 line-clamp-1">{{ $scheme->title }}</h4>
-                        <p class="mt-1 text-xs text-slate-600 line-clamp-2">{{ $scheme->description }}</p>
+                        <h4 class="text-lg font-bold text-txt-100 group-hover:text-primary-300 transition-colors line-clamp-1 mb-2">{{ $scheme->title }}</h4>
+                        <p class="text-sm font-light text-txt-200 line-clamp-2 leading-relaxed">{{ $scheme->description }}</p>
                     </a>
                 @endforeach
             </div>

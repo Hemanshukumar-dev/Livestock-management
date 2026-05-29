@@ -1,103 +1,163 @@
 @extends('layouts.app')
 
-
 @section('title', 'Owner Dashboard')
 
 @section('content')
-    <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-            <span class="mb-2 inline-block rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-700/10">Farmer Dashboard</span>
-            <h2 class="mt-1 text-3xl font-semibold tracking-tight text-slate-900">Owner Dashboard</h2>
-            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Manage your livestock records, health activities, and discover relevant government schemes.</p>
+    {{-- Ambient Atmosphere --}}
+    <div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+        <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary-300/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-70"></div>
+        <div class="absolute -bottom-32 left-0 w-[50rem] h-[50rem] bg-accent-200/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-60"></div>
+        {{-- Subtle noise texture --}}
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMSIvPjwvc3ZnPg==')] opacity-50 dark:opacity-20 mix-blend-overlay"></div>
+    </div>
+
+    {{-- Page Header --}}
+    <div class="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between relative z-10">
+        <div class="animate-[fadeUp_0.8s_ease-out_forwards]">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-300/10 border border-primary-300/20 text-primary-300 text-xs font-medium uppercase tracking-widest mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-300"></span>
+                Farmer Workspace
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-txt-100 leading-[1.1]">
+                Owner Dashboard
+            </h2>
+            <p class="mt-3 max-w-2xl text-base leading-relaxed text-txt-200 font-light">
+                Manage your livestock records, health activities, and discover relevant government schemes in one unified environment.
+            </p>
         </div>
         @if ($owner)
-            <div class="flex items-center gap-3">
-                <a href="{{ route('livestock.index') }}" class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 shadow-sm flex items-center gap-2">
-                    <span>🐄</span> My Livestock
+            <div class="flex items-center gap-3 animate-[fadeLeft_0.8s_ease-out_forwards]">
+                <a href="{{ route('livestock.index') }}" class="inline-flex items-center justify-center rounded-full border border-bg-300 bg-bg-300/80 backdrop-blur-md px-5 py-2.5 text-sm font-medium text-txt-100 transition-all hover:hover:bg-primary-100/20 hover:border-primary-300/30">
+                    <span class="mr-2">🐄</span> My Livestock
                 </a>
-                <a href="{{ route('livestock.create') }}" class="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-600 shadow-sm flex items-center gap-2">
-                    <span>➕</span> Add Livestock
+                <a href="{{ route('livestock.create') }}" class="group relative inline-flex items-center justify-center rounded-full bg-primary-200 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-primary-100 hover:shadow-cinematic-hover shadow-cinematic border border-primary-100 overflow-hidden">
+                    <span class="absolute inset-0 w-full h-full bg-gradient-to-b from-white/10 to-transparent"></span>
+                    <span class="relative flex items-center gap-2">
+                        <span>➕</span> Add Livestock
+                    </span>
                 </a>
             </div>
         @endif
     </div>
 
     @if (! $owner)
-        <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
-            <h3 class="text-xl font-semibold text-slate-900">Owner profile not linked yet</h3>
-            <p class="mt-2 text-sm text-slate-600">Your user account is active, but an owner record has not been linked by an administrator.</p>
+        {{-- Empty State (No Owner Linked) --}}
+        <div class="rounded-3xl border border-bg-300 bg-bg-300/60 backdrop-blur-md px-8 py-20 text-center shadow-cinematic relative z-10">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full hover:bg-primary-100/20 mb-6 text-2xl">
+                🔗
+            </div>
+            <h3 class="text-2xl font-bold text-txt-100">Profile Not Linked</h3>
+            <p class="mt-3 text-txt-200 font-light max-w-md mx-auto">Your user account is active, but an owner record has not been securely linked by an administrator yet.</p>
         </div>
     @else
         @php $historyCount = $owner->livestock->sum(fn ($animal) => $animal->histories->count()); @endphp
 
-        <div class="mb-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                <p class="text-sm font-medium uppercase tracking-[0.15em] text-slate-500">Owner</p>
-                <h3 class="mt-3 text-2xl font-semibold text-slate-900">{{ $owner->name }}</h3>
-                <p class="mt-2 text-sm text-slate-600">Code: {{ $owner->owner_code }}</p>
-                <p class="mt-1 text-sm text-slate-600">Phone: {{ $owner->phone }}</p>
+        {{-- Overview Stats (Primary Elevated Surfaces) --}}
+        <div class="mb-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3 relative z-10">
+            {{-- Owner Card --}}
+            <div class="rounded-3xl border border-bg-300 bg-bg-300 p-8 shadow-cinematic transition-all hover:shadow-cinematic-hover hover:-translate-y-1 group">
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-txt-200">Identity</p>
+                    <div class="w-8 h-8 rounded-full hover:bg-primary-100/20 flex items-center justify-center text-txt-200 group-hover:bg-primary-300/10 group-hover:text-primary-300 transition-colors">👤</div>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-bold text-txt-100 mb-4 line-clamp-1">{{ $owner->name }}</h3>
+                <div class="space-y-1 text-sm font-medium">
+                    <p class="text-txt-200"><span class="text-txt-200 mr-2">Code</span> {{ $owner->owner_code }}</p>
+                    <p class="text-txt-200"><span class="text-txt-200 mr-2">Phone</span> {{ $owner->phone }}</p>
+                </div>
             </div>
 
-            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                <p class="text-sm font-medium uppercase tracking-[0.15em] text-slate-500">Livestock</p>
-                <h3 class="mt-3 text-4xl font-bold text-slate-900">{{ $owner->livestock->count() }}</h3>
-                <p class="mt-2 text-sm text-slate-600">Animals linked to your account</p>
+            {{-- Livestock Count Card --}}
+            <div class="rounded-3xl border border-bg-300 bg-bg-300 p-8 shadow-cinematic transition-all hover:shadow-cinematic-hover hover:-translate-y-1 group relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-primary-300/5 rounded-full blur-2xl group-hover:bg-primary-300/10 transition-colors"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-widest text-txt-200">Registry</p>
+                        <div class="w-8 h-8 rounded-full hover:bg-primary-100/20 flex items-center justify-center text-txt-200 group-hover:bg-primary-300/10 group-hover:text-primary-300 transition-colors">🐄</div>
+                    </div>
+                    <h3 class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-agri-primary to-txt-200 mb-2">{{ $owner->livestock->count() }}</h3>
+                    <p class="text-sm font-medium text-txt-200">Animals currently linked</p>
+                </div>
             </div>
 
-            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                <p class="text-sm font-medium uppercase tracking-[0.15em] text-slate-500">History</p>
-                <h3 class="mt-3 text-4xl font-bold text-slate-900">{{ $historyCount }}</h3>
-                <p class="mt-2 text-sm text-slate-600">Recorded events across all livestock</p>
+            {{-- History Count Card --}}
+            <div class="rounded-3xl border border-bg-300 bg-bg-300 p-8 shadow-cinematic transition-all hover:shadow-cinematic-hover hover:-translate-y-1 group relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-accent-200/5 rounded-full blur-2xl group-hover:bg-accent-200/10 transition-colors"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-widest text-txt-200">Logs</p>
+                        <div class="w-8 h-8 rounded-full hover:bg-primary-100/20 flex items-center justify-center text-txt-200 group-hover:bg-accent-200/10 group-hover:text-accent-200 transition-colors">📝</div>
+                    </div>
+                    <h3 class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-agri-primary to-txt-200 mb-2">{{ $historyCount }}</h3>
+                    <p class="text-sm font-medium text-txt-200">Recorded events across herd</p>
+                </div>
             </div>
         </div>
 
-        <div class="grid gap-6 lg:grid-cols-2">
-            <div class="space-y-6">
-                {{-- Animals Needing Attention --}}
-                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div class="mb-5 flex items-center justify-between">
-                        <h3 class="font-semibold text-slate-900 flex items-center gap-2"><span>⚠️</span> Needs Attention</h3>
+        {{-- Main Dashboard Layout (Two Columns) --}}
+        <div class="grid gap-8 lg:grid-cols-12 relative z-10 mb-12">
+            
+            {{-- Left Column: Needs Attention & Recent Additions --}}
+            <div class="lg:col-span-5 space-y-8">
+                
+                {{-- Needs Attention (Glassmorphism Secondary Panel) --}}
+                <div class="rounded-3xl border border-bg-300 bg-bg-300/60 backdrop-blur-xl p-6 sm:p-8 shadow-cinematic transition-all hover:bg-bg-300/80">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-txt-100 flex items-center gap-2">
+                            <span class="text-status-warning">⚠️</span> Action Required
+                        </h3>
                     </div>
                     @if ($attentionLivestock->isEmpty())
-                        <div class="rounded-xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-500 border border-dashed border-slate-200">
-                            All animals are currently marked as healthy.
+                        <div class="rounded-2xl hover:bg-primary-100/20 px-6 py-10 text-center border border-bg-300 transition-colors">
+                            <div class="text-2xl mb-3 opacity-50 filter grayscale">✨</div>
+                            <p class="text-sm font-medium text-txt-200">All clear</p>
+                            <p class="text-xs text-txt-200 mt-1">Animals are healthy.</p>
                         </div>
                     @else
                         <div class="space-y-3">
                             @foreach ($attentionLivestock as $animal)
                                 <?php
-                                    $statusClasses = [
-                                        'Sick' => 'bg-red-100 text-red-700',
-                                        'Under Treatment' => 'bg-yellow-100 text-yellow-800',
-                                        'Hospitalized' => 'bg-slate-200 text-slate-800',
-                                        'Injured' => 'bg-amber-100 text-amber-800',
-                                    ][$animal->health_status] ?? 'bg-slate-100 text-slate-600';
+                                    $statusConfig = [
+                                        'Sick' => ['bg-status-danger/10 text-status-danger border-agri-danger/20', 'bg-status-danger'],
+                                        'Under Treatment' => ['bg-status-warning/10 text-status-warning border-agri-warning/20', 'bg-status-warning'],
+                                        'Hospitalized' => ['bg-txt-200/10 text-txt-200 border-agri-muted/20', 'bg-txt-200'],
+                                        'Injured' => ['bg-status-warning/10 text-status-warning border-agri-warning/20', 'bg-status-warning'],
+                                    ][$animal->health_status] ?? ['hover:bg-primary-100/20 text-txt-200 border-bg-300', 'bg-txt-200'];
+                                    
                                     $typeIcon = (function($t) { $m = ['cow'=>'🐄', 'cattle'=>'🐄', 'goat'=>'🐐', 'sheep'=>'🐑', 'pig'=>'🐖', 'horse'=>'🐴', 'chicken'=>'🐔', 'poultry'=>'🐔', 'duck'=>'🦆']; return $m[$t] ?? '🐾'; })(strtolower($animal->type));
                                 ?>
-                                <a href="{{ route('livestock.show', $animal->id) }}" class="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-3.5 transition hover:border-slate-300 hover:shadow-sm">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-xl">{{ $typeIcon }}</span>
+                                <a href="{{ route('livestock.show', $animal->id) }}" class="group flex items-center justify-between rounded-2xl border border-bg-300 bg-bg-300 p-4 transition-all hover:shadow-cinematic hover:hover:bg-primary-100/20 hover:-translate-y-0.5">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-full bg-bg-100 flex items-center justify-center text-lg border border-bg-300 group-hover:scale-110 transition-transform">
+                                            {{ $typeIcon }}
+                                        </div>
                                         <div>
-                                            <p class="text-sm font-semibold text-slate-900">{{ $animal->tag_number }}</p>
-                                            <p class="text-xs text-slate-500">{{ $animal->type }}</p>
+                                            <p class="text-sm font-bold text-txt-100">{{ $animal->tag_number }}</p>
+                                            <p class="text-xs font-medium text-txt-200 mt-0.5">{{ $animal->type }}</p>
                                         </div>
                                     </div>
-                                    <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClasses }}">{{ $animal->health_status }}</span>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider {{ $statusConfig[0] }}">
+                                        <span class="w-1.5 h-1.5 rounded-full {{ $statusConfig[1] }} animate-pulse"></span>
+                                        {{ $animal->health_status }}
+                                    </span>
                                 </a>
                             @endforeach
                         </div>
                     @endif
                 </div>
 
-                {{-- Recently Added Livestock --}}
-                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div class="mb-5 flex items-center justify-between">
-                        <h3 class="font-semibold text-slate-900 flex items-center gap-2"><span>🆕</span> Recently Added</h3>
-                        <a href="{{ route('livestock.index') }}" class="text-sm font-medium text-green-600 hover:text-green-700">View All →</a>
+                {{-- Recently Added --}}
+                <div class="rounded-3xl border border-bg-300 bg-bg-300/60 backdrop-blur-xl p-6 sm:p-8 shadow-cinematic transition-all hover:bg-bg-300/80">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-txt-100 flex items-center gap-2">
+                            <span class="text-status-success">🆕</span> New Records
+                        </h3>
+                        <a href="{{ route('livestock.index') }}" class="text-xs font-semibold uppercase tracking-wider text-primary-300 hover:text-primary-200 transition-colors">View All</a>
                     </div>
                     @if ($latestLivestock->isEmpty())
-                        <div class="rounded-xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-500 border border-dashed border-slate-200">
-                            No livestock added yet.
+                        <div class="rounded-2xl hover:bg-primary-100/20 px-6 py-10 text-center border border-bg-300">
+                            <p class="text-sm font-medium text-txt-200">Registry empty</p>
+                            <p class="text-xs text-txt-200 mt-1">No livestock added recently.</p>
                         </div>
                     @else
                         <div class="space-y-3">
@@ -105,15 +165,22 @@
                                 <?php
                                     $typeIcon = (function($t) { $m = ['cow'=>'🐄', 'cattle'=>'🐄', 'goat'=>'🐐', 'sheep'=>'🐑', 'pig'=>'🐖', 'horse'=>'🐴', 'chicken'=>'🐔', 'poultry'=>'🐔', 'duck'=>'🦆']; return $m[$t] ?? '🐾'; })(strtolower($animal->type));
                                 ?>
-                                <a href="{{ route('livestock.show', $animal->id) }}" class="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-3.5 transition hover:border-green-200 hover:bg-green-50/50">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-xl">{{ $typeIcon }}</span>
+                                <a href="{{ route('livestock.show', $animal->id) }}" class="group flex items-center justify-between rounded-2xl border border-bg-300 bg-bg-300 p-4 transition-all hover:shadow-cinematic hover:-translate-y-0.5 hover:border-primary-300/30">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-full bg-primary-300/10 flex items-center justify-center text-lg border border-primary-300/10 group-hover:bg-primary-300/20 transition-colors">
+                                            {{ $typeIcon }}
+                                        </div>
                                         <div>
-                                            <p class="text-sm font-semibold text-slate-900">{{ $animal->tag_number }}</p>
-                                            <p class="text-xs text-slate-500">{{ $animal->type }} <span class="text-slate-400">({{ $animal->breed ?? 'N/A' }})</span></p>
+                                            <p class="text-sm font-bold text-txt-100">{{ $animal->tag_number }}</p>
+                                            <p class="text-xs font-medium text-txt-200 mt-0.5">
+                                                {{ $animal->type }} 
+                                                @if($animal->breed)
+                                                    <span class="text-bg-300 mx-1">|</span> <span class="text-txt-200">{{ $animal->breed }}</span>
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
-                                    <span class="text-xs font-medium text-slate-400">{{ $animal->created_at->diffForHumans() }}</span>
+                                    <span class="text-[10px] font-semibold uppercase tracking-wider text-txt-200">{{ $animal->created_at->diffForHumans(null, true, true) }} ago</span>
                                 </a>
                             @endforeach
                         </div>
@@ -121,52 +188,71 @@
                 </div>
             </div>
 
-            <div class="space-y-6">
-                {{-- Recent Health Activity --}}
-                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div class="mb-6 flex items-center justify-between">
-                        <h3 class="font-semibold text-slate-900 flex items-center gap-2"><span>🩺</span> Recent Activity</h3>
+            {{-- Right Column: Timeline & Activity --}}
+            <div class="lg:col-span-7">
+                <div class="rounded-3xl border border-bg-300 bg-bg-300 p-8 shadow-cinematic h-full">
+                    <div class="mb-8 flex items-center justify-between border-b border-bg-300 pb-4">
+                        <h3 class="text-xl font-bold text-txt-100 flex items-center gap-2">
+                            <span class="text-txt-200">⏱️</span> Health Timeline
+                        </h3>
                     </div>
+                    
                     @if ($recentHistory->isEmpty())
-                        <div class="rounded-xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-500 border border-dashed border-slate-200">
-                            No health records found.
+                        <div class="rounded-2xl hover:bg-primary-100/20 px-6 py-16 text-center border border-bg-300 mt-4">
+                            <div class="text-3xl mb-4 opacity-40 grayscale">📝</div>
+                            <p class="text-base font-semibold text-txt-100">Clean Slate</p>
+                            <p class="text-sm text-txt-200 mt-2 max-w-sm mx-auto">No recent health records or events have been logged for your animals.</p>
                         </div>
                     @else
-                        <div class="space-y-5">
+                        <div class="relative pl-4 sm:pl-6 space-y-8 mt-4 before:absolute before:inset-y-0 before:left-[21px] sm:before:left-[29px] before:w-px before:bg-gradient-to-b before:from-agri-border before:via-bg-300 before:to-transparent">
                             @foreach ($recentHistory as $history)
                                 <?php
+                                    // Map to semantic variables
                                     $eventColor = [
-                                        'Vaccination' => ['text-blue-500', 'bg-blue-100', '💉'],
-                                        'Treatment' => ['text-purple-500', 'bg-purple-100', '💊'],
-                                        'Checkup' => ['text-green-500', 'bg-green-100', '🩺'],
-                                        'Illness' => ['text-red-500', 'bg-red-100', '🤒'],
-                                        'Deworming' => ['text-teal-500', 'bg-teal-100', '🧪'],
-                                        'Surgery' => ['text-orange-500', 'bg-orange-100', '🔬'],
-                                    ][$history->event_type] ?? ['text-slate-500', 'bg-slate-100', '📝'];
+                                        'Vaccination' => ['text-primary-300', 'bg-primary-300/10', 'border-primary-300/20', '💉'],
+                                        'Treatment' => ['text-accent-200', 'bg-accent-200/10', 'border-accent-200/20', '💊'],
+                                        'Checkup' => ['text-status-success', 'bg-status-success/10', 'border-agri-success/20', '🩺'],
+                                        'Illness' => ['text-status-danger', 'bg-status-danger/10', 'border-agri-danger/20', '🤒'],
+                                        'Deworming' => ['text-primary-300', 'bg-primary-300/10', 'border-primary-300/20', '🧪'],
+                                        'Surgery' => ['text-status-warning', 'bg-status-warning/10', 'border-agri-warning/20', '🔬'],
+                                    ][$history->event_type] ?? ['text-txt-200', 'hover:bg-primary-100/20', 'border-bg-300', '📝'];
                                 ?>
-                                <div class="relative flex gap-4 pl-2">
-                                    @if (!$loop->last)
-                                        <div class="absolute left-[15px] top-6 bottom-[-20px] w-px bg-slate-100"></div>
-                                    @endif
-                                    <div class="relative z-10 flex h-6 w-6 items-center justify-center rounded-full {{ $eventColor[1] }} ring-4 ring-white mt-0.5 shadow-sm text-xs">
-                                        {{ $eventColor[2] }}
+                                <div class="relative group">
+                                    {{-- Glowing Dot --}}
+                                    <div class="absolute -left-6 sm:-left-8 top-1 flex h-8 w-8 items-center justify-center rounded-full {{ $eventColor[1] }} border {{ $eventColor[2] }} {{ $eventColor[0] }} text-sm shadow-sm ring-4 ring-agri-surface transition-transform group-hover:scale-110">
+                                        {{ $eventColor[3] }}
                                     </div>
-                                    <div class="flex-1 pb-1">
-                                        <p class="text-sm font-semibold text-slate-900">
-                                            {{ $history->event_type }} 
-                                            <span class="font-normal text-slate-500">on</span> 
-                                            <a href="{{ route('livestock.show', $history->livestock->id) }}" class="text-green-600 hover:underline hover:text-green-700">{{ $history->livestock->tag_number }}</a>
+                                    
+                                    {{-- Content Block --}}
+                                    <div class="pl-6">
+                                        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                                            <p class="text-base font-bold text-txt-100">
+                                                {{ $history->event_type }}
+                                            </p>
+                                            <p class="text-xs font-semibold uppercase tracking-widest text-txt-200 mt-1 sm:mt-0">
+                                                {{ \Illuminate\Support\Carbon::parse($history->event_date)->format('M d, Y') }}
+                                            </p>
+                                        </div>
+                                        <p class="text-sm font-medium text-txt-200 mb-3">
+                                            Administered to <a href="{{ route('livestock.show', $history->livestock->id) }}" class="text-primary-300 hover:text-primary-200 font-bold transition-colors">{{ $history->livestock->tag_number }}</a>
                                         </p>
-                                        <p class="mt-0.5 text-xs font-medium text-slate-400">{{ \Illuminate\Support\Carbon::parse($history->event_date)->format('M d, Y') }}</p>
+                                        
                                         @if($history->description)
-                                            <p class="mt-2 text-sm text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">{{ \Illuminate\Support\Str::limit($history->description, 80) }}</p>
+                                            <div class="rounded-2xl border border-bg-300 hover:bg-primary-100/20 p-4 text-sm leading-relaxed text-txt-200 mb-4 transition-colors group-hover:bg-bg-300">
+                                                {{ $history->description }}
+                                            </div>
                                         @endif
-                                        <div class="mt-3 flex items-center gap-2">
-                                            <a href="{{ route('livestock.histories.edit', $history->id) }}" class="rounded-lg border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 transition">✏️ Edit</a>
+                                        
+                                        <div class="flex items-center gap-3 opacity-0 transform translate-y-1 transition-all group-hover:opacity-100 group-hover:translate-y-0">
+                                            <a href="{{ route('livestock.histories.edit', $history->id) }}" class="inline-flex items-center rounded-lg border border-bg-300 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-txt-200 hover:hover:bg-primary-100/20 hover:text-txt-100 transition-colors">
+                                                Edit Log
+                                            </a>
                                             <form method="POST" action="{{ route('livestock.histories.destroy', $history->id) }}" class="inline" onsubmit="return false;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" onclick="openDeleteHistoryModal(this.closest('form'), '{{ $history->event_type }}')" class="rounded-lg border border-red-200 text-red-600 px-3 py-1 text-xs font-medium hover:bg-red-50 transition">🗑 Delete</button>
+                                                <button type="button" onclick="openDeleteHistoryModal(this.closest('form'), '{{ $history->event_type }}')" class="inline-flex items-center rounded-lg border border-agri-danger/20 bg-status-danger/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-status-danger hover:bg-status-danger/20 transition-colors">
+                                                    Delete
+                                                </button>
                                             </form>
                                         </div>
                                     </div>
@@ -179,25 +265,65 @@
         </div>
     @endif
 
-    <div id="delete-history-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm">
-        <div class="mx-4 w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl">
+    {{-- Editorial Scheme Panels --}}
+    <div class="relative z-10 pt-8 border-t border-bg-300">
+        <div class="mb-6 flex items-center justify-between">
+            <h3 class="text-xl font-bold text-txt-100 flex items-center gap-2">
+                <span class="text-primary-300">✦</span> Recommended Schemes
+            </h3>
+            <a href="{{ route('schemes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-txt-200 hover:text-txt-100 transition-colors group">
+                Browse Directory 
+                <span class="transform transition-transform group-hover:translate-x-1">→</span>
+            </a>
+        </div>
+        
+        @if ($featuredSchemes->isEmpty())
+            <div class="rounded-3xl bg-bg-300/60 backdrop-blur-md px-6 py-12 text-center border border-bg-300 shadow-cinematic">
+                <p class="text-sm font-medium text-txt-200">No active schemes found.</p>
+            </div>
+        @else
+            <div class="grid gap-6 md:grid-cols-3">
+                @foreach ($featuredSchemes as $scheme)
+                    <a href="{{ route('schemes.show', $scheme) }}" class="group block rounded-3xl border border-bg-300 bg-bg-300 p-6 shadow-cinematic transition-all duration-300 hover:-translate-y-1 hover:shadow-cinematic-hover hover:border-primary-300/30">
+                        <div class="mb-4 flex flex-wrap items-center gap-2">
+                            <span class="inline-flex rounded-full bg-primary-200 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-bg-100">{{ $scheme->scheme_type }}</span>
+                            <span class="text-xs font-medium text-txt-200">{{ $scheme->category }}</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-txt-100 group-hover:text-primary-300 transition-colors line-clamp-2 leading-tight mb-3">
+                            {{ $scheme->title }}
+                        </h4>
+                        <p class="text-sm font-light leading-relaxed text-txt-200 line-clamp-3">
+                            {{ $scheme->description }}
+                        </p>
+                        <div class="mt-6 flex items-center text-xs font-bold uppercase tracking-widest text-primary-300 group-hover:text-primary-100 transition-colors">
+                            Read Details <span class="ml-1 transform transition-transform group-hover:translate-x-1">→</span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
+    {{-- Modals --}}
+    <div id="delete-history-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-bg-100/80 backdrop-blur-md transition-opacity">
+        <div class="mx-4 w-full max-w-md rounded-3xl border border-bg-300 bg-bg-300 p-8 shadow-cinematic">
             <div class="text-center">
-                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-3xl">⚠️</div>
-                <h3 class="mt-4 text-xl font-semibold text-slate-900">Delete History Record</h3>
-                <p class="mt-2 text-sm text-slate-600">Are you sure you want to delete the <strong id="delete-history-type"></strong> record? This action cannot be undone.</p>
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-status-danger/10 text-3xl mb-6 ring-4 ring-agri-danger/10">⚠️</div>
+                <h3 class="text-2xl font-bold text-txt-100">Delete Record</h3>
+                <p class="mt-3 text-sm font-light text-txt-200 leading-relaxed">Are you sure you want to permanently remove the <strong id="delete-history-type" class="font-bold text-txt-100"></strong> record? This action cannot be reversed.</p>
             </div>
             <div class="mt-8 flex gap-3">
                 <button
                     type="button"
                     onclick="closeDeleteHistoryModal()"
-                    class="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                    class="flex-1 rounded-full border border-bg-300 hover:bg-primary-100/20 px-4 py-3 text-sm font-bold text-txt-100 transition-colors hover:bg-bg-300"
                 >
                     Cancel
                 </button>
                 <button
                     type="button"
                     id="confirm-history-delete-btn"
-                    class="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-500"
+                    class="flex-1 rounded-full bg-status-danger px-4 py-3 text-sm font-bold text-white transition-colors hover:opacity-90 shadow-cinematic hover:shadow-cinematic-hover"
                 >
                     Yes, Delete
                 </button>
@@ -214,13 +340,30 @@
             const modal = document.getElementById('delete-history-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            
+            // Trigger animation
+            const content = modal.querySelector('div.max-w-md');
+            content.style.opacity = '0';
+            content.style.transform = 'scale(0.95) translateY(10px)';
+            requestAnimationFrame(() => {
+                content.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                content.style.opacity = '1';
+                content.style.transform = 'scale(1) translateY(0)';
+            });
         }
 
         function closeDeleteHistoryModal() {
-            activeHistoryDeleteForm = null;
             const modal = document.getElementById('delete-history-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            const content = modal.querySelector('div.max-w-md');
+            
+            content.style.opacity = '0';
+            content.style.transform = 'scale(0.95) translateY(10px)';
+            
+            setTimeout(() => {
+                activeHistoryDeleteForm = null;
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
         }
 
         document.getElementById('confirm-history-delete-btn')?.addEventListener('click', function () {
@@ -232,34 +375,20 @@
         });
 
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') closeDeleteHistoryModal();
+            if (e.key === 'Escape' && !document.getElementById('delete-history-modal').classList.contains('hidden')) {
+                closeDeleteHistoryModal();
+            }
         });
     </script>
 
-    <!-- Featured Schemes -->
-    <div class="mt-4">
-        <div class="mb-3 flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-slate-900">Featured Government Schemes</h3>
-            <a href="{{ route('schemes.index') }}" class="text-xs font-semibold text-sky-600 hover:text-sky-700">Browse All Schemes →</a>
-        </div>
-        
-        @if ($featuredSchemes->isEmpty())
-            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
-                No schemes available at the moment.
-            </div>
-        @else
-            <div class="grid gap-3 md:grid-cols-3">
-                @foreach ($featuredSchemes as $scheme)
-                    <a href="{{ route('schemes.show', $scheme) }}" class="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-sky-200 hover:shadow-md">
-                        <div class="mb-2 flex items-center justify-between">
-                            <span class="inline-flex rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700">{{ $scheme->scheme_type }}</span>
-                            <span class="text-xs text-slate-500">{{ $scheme->category }}</span>
-                        </div>
-                        <h4 class="font-semibold text-slate-900 group-hover:text-sky-700 line-clamp-1">{{ $scheme->title }}</h4>
-                        <p class="mt-1 text-xs text-slate-600 line-clamp-2">{{ $scheme->description }}</p>
-                    </a>
-                @endforeach
-            </div>
-        @endif
-    </div>
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeLeft {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
 @endsection

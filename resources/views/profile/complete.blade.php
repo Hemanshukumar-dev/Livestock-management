@@ -9,16 +9,16 @@
     @endphp
 
     {{-- Welcome Card --}}
-    <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div class="rounded-3xl border border-bg-300 bg-bg-100 p-8 shadow-sm">
 
         {{-- Header --}}
         <div class="text-center mb-8">
             <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl mb-4">
                 👋
             </div>
-            <h1 class="text-2xl font-bold text-slate-900">Complete Your Profile</h1>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed">
-                Welcome, <strong class="text-slate-800">{{ auth()->user()->name }}</strong>!
+            <h1 class="text-2xl font-bold text-txt-100">Complete Your Profile</h1>
+            <p class="mt-2 text-sm text-txt-200 leading-relaxed">
+                Welcome, <strong class="text-txt-100">{{ auth()->user()->name }}</strong>!
                 We just need a couple more details to set up your account.
             </p>
         </div>
@@ -53,7 +53,7 @@
                     maxlength="20"
                     autocomplete="tel"
                     placeholder="e.g. +91 98765 43210"
-                    class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="mt-1.5 block w-full rounded-xl border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 />
                 <p class="mt-1 text-xs text-slate-400">Your contact number for farm-related communication</p>
             </div>
@@ -71,7 +71,7 @@
                     maxlength="500"
                     autocomplete="street-address"
                     placeholder="e.g. Village Rampur, Block Sadar, District Varanasi, UP 221001"
-                    class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 resize-none"
+                    class="mt-1.5 block w-full rounded-xl border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 resize-none"
                 >{{ old('address') }}</textarea>
                 <p class="mt-1 text-xs text-slate-400">Your farm or home address for record keeping</p>
             </div>
@@ -83,7 +83,7 @@
                 <select
                     id="state"
                     name="state"
-                    class="mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="mt-1.5 block w-full rounded-xl border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 >
                     <option value="">Select your state...</option>
                     @foreach ($states as $st)

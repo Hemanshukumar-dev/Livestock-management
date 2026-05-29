@@ -5,244 +5,304 @@
 @section('content')
     @php $currentUser = auth()->user(); @endphp
 
+    {{-- Ambient Atmosphere --}}
+    <div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+        <div class="absolute top-[-10%] right-[-5%] w-[40rem] h-[40rem] bg-stone-200/30 dark:bg-emerald-900/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70"></div>
+        <div class="absolute top-[40%] left-[-10%] w-[50rem] h-[50rem] bg-emerald-50/50 dark:bg-bg-300/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-60"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMSIvPjwvc3ZnPg==')] opacity-50 dark:opacity-20 mix-blend-overlay"></div>
+    </div>
+
     @if (session('success'))
-        <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800 shadow-sm">
-            <span class="mr-2">✅</span>{{ session('success') }}
+        <div class="mb-8 rounded-2xl border border-emerald-200/80 dark:border-emerald-500/20 bg-emerald-50 dark:bg-emerald-500/10 px-5 py-4 text-sm font-semibold text-emerald-800 dark:text-emerald-400 shadow-sm relative z-10 animate-[fadeUp_0.4s_ease-out_forwards]">
+            <span class="mr-2">✅</span> {{ session('success') }}
         </div>
     @endif
 
     {{-- Page Header --}}
-    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div class="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between relative z-10 animate-[fadeUp_0.6s_ease-out_forwards]">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">🐄 Livestock Registry</p>
-            <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bg-200 dark:bg-bg-100 border border-bg-300 dark:border-white/10 text-txt-200 dark:text-stone-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 dark:bg-sky-500"></span>
+                Registry
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-txt-100 dark:text-white leading-[1.1]">
                 {{ $currentUser?->isAdmin() ? 'All Livestock Records' : 'My Livestock' }}
             </h2>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-600">
-                Browse, search, and filter all registered animals. Click any animal to view full profile and health history.
+            <p class="mt-3 max-w-2xl text-base leading-relaxed text-txt-200 dark:text-stone-400 font-light">
+                Browse, search, and manage registered animals. Click any animal to view full profile and health history.
             </p>
         </div>
-        <div class="flex items-center gap-3">
-            <span class="rounded-xl bg-sky-50 border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-800">
-                {{ $livestock->total() }} animal{{ $livestock->total() === 1 ? '' : 's' }} registered
+        <div class="flex items-center gap-4 shrink-0">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-bg-200 dark:bg-bg-100 border border-bg-300 dark:border-white/10 px-4 py-2 text-xs font-bold text-txt-200 dark:text-stone-400">
+                <span class="text-txt-100 dark:text-white">{{ $livestock->total() }}</span> Total
             </span>
-            <a href="{{ route('livestock.create') }}" class="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-500 shadow-sm flex items-center gap-2">
-                <span>➕</span> Add Livestock
+            <a href="{{ route('livestock.create') }}" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:from-emerald-500 hover:to-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] border border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                <span class="mr-2">➕</span> Add Livestock
             </a>
         </div>
     </div>
 
-    {{-- Search & Filter --}}
-    <form method="GET" action="{{ route('livestock.index') }}" class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div class="mb-4 flex items-center gap-2">
-            <span class="text-lg">🔍</span>
-            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">Search & Filter</p>
-        </div>
-
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <div>
-                <label for="filter-tag" class="block text-sm font-medium text-slate-700">Tag Number</label>
-                <input type="text" id="filter-tag" name="tag_number" value="{{ request('tag_number') }}" placeholder="e.g. TAG-001" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20" />
+    {{-- Premium Search & Filter Toolbar --}}
+    <form method="GET" action="{{ route('livestock.index') }}" class="mb-10 relative z-10 animate-[fadeUp_0.7s_ease-out_forwards]">
+        <div class="rounded-3xl border border-bg-300/80 dark:border-white/5 bg-bg-100 dark:bg-bg-100/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] dark:shadow-none p-6">
+            <div class="mb-5 flex items-center justify-between">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-txt-100 dark:text-white flex items-center gap-2">
+                    <span class="text-stone-400">🔍</span> Filter Records
+                </h3>
             </div>
 
-            @if ($currentUser?->isAdmin())
-                <div>
-                    <label for="filter-owner" class="block text-sm font-medium text-slate-700">Owner Name</label>
-                    <input type="text" id="filter-owner" name="owner_name" value="{{ request('owner_name') }}" placeholder="Search owner..." class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20" />
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 items-end">
+                {{-- Tag Filter --}}
+                <div class="xl:col-span-1">
+                    <label for="filter-tag" class="block text-[11px] font-bold uppercase tracking-wider text-txt-200 dark:text-stone-400 mb-1.5">Tag Number</label>
+                    <input type="text" id="filter-tag" name="tag_number" value="{{ request('tag_number') }}" placeholder="e.g. TAG-001" class="block w-full rounded-xl border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-bg-100 px-4 py-2.5 text-sm font-mono text-txt-100 dark:text-white placeholder-stone-400 dark:placeholder-stone-500 transition-all focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" />
                 </div>
-                <div>
-                    <label for="filter-code" class="block text-sm font-medium text-slate-700">Owner Code</label>
-                    <input type="text" id="filter-code" name="owner_code" value="{{ request('owner_code') }}" placeholder="e.g. OWN001" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20" />
+
+                {{-- Type Filter --}}
+                <div class="xl:col-span-1">
+                    <label for="filter-type" class="block text-[11px] font-bold uppercase tracking-wider text-txt-200 dark:text-stone-400 mb-1.5">Livestock Type</label>
+                    <select id="filter-type" name="type" class="block w-full rounded-xl border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-[#1a211e] px-4 py-2.5 text-sm text-txt-100 dark:text-white transition-all focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        <option value="" class="bg-bg-100 dark:bg-[#1a211e]">All Types</option>
+                        @foreach ($livestockTypes as $type)
+                            <option value="{{ $type }}" {{ request('type') === $type ? 'selected' : '' }} class="bg-bg-100 dark:bg-[#1a211e]">{{ $type }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            @endif
 
-            <div>
-                <label for="filter-type" class="block text-sm font-medium text-slate-700">Livestock Type</label>
-                <select id="filter-type" name="type" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20">
-                    <option value="">All Types</option>
-                    @foreach ($livestockTypes as $type)
-                        <option value="{{ $type }}" {{ request('type') === $type ? 'selected' : '' }}>{{ $type }}</option>
-                    @endforeach
-                </select>
-            </div>
+                {{-- Health Status Filter --}}
+                <div class="xl:col-span-1">
+                    <label for="filter-health" class="block text-[11px] font-bold uppercase tracking-wider text-txt-200 dark:text-stone-400 mb-1.5">Health Status</label>
+                    <select id="filter-health" name="health_status" class="block w-full rounded-xl border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-[#1a211e] px-4 py-2.5 text-sm text-txt-100 dark:text-white transition-all focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        <option value="" class="bg-bg-100 dark:bg-[#1a211e]">All Statuses</option>
+                        @foreach ($healthStatuses as $status)
+                            <option value="{{ $status }}" {{ request('health_status') === $status ? 'selected' : '' }} class="bg-bg-100 dark:bg-[#1a211e]">{{ $status }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div>
-                <label for="filter-breed" class="block text-sm font-medium text-slate-700">Breed</label>
-                <select id="filter-breed" name="breed" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20">
-                    <option value="">All Breeds</option>
-                    @foreach ($breeds as $breed)
-                        <option value="{{ $breed }}" {{ request('breed') === $breed ? 'selected' : '' }}>{{ $breed }}</option>
-                    @endforeach
-                </select>
-            </div>
+                @if ($currentUser?->isAdmin())
+                    {{-- Owner Code Filter (Admin only) --}}
+                    <div class="xl:col-span-1">
+                        <label for="filter-code" class="block text-[11px] font-bold uppercase tracking-wider text-txt-200 dark:text-stone-400 mb-1.5">Owner Code</label>
+                        <input type="text" id="filter-code" name="owner_code" value="{{ request('owner_code') }}" placeholder="e.g. OWN001" class="block w-full rounded-xl border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-bg-100 px-4 py-2.5 text-sm font-mono text-txt-100 dark:text-white placeholder-stone-400 dark:placeholder-stone-500 transition-all focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" />
+                    </div>
+                @else
+                    <div class="xl:col-span-1 hidden xl:block"></div> {{-- Spacer --}}
+                @endif
 
-            <div>
-                <label for="filter-health" class="block text-sm font-medium text-slate-700">Health Status</label>
-                <select id="filter-health" name="health_status" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20">
-                    <option value="">All Statuses</option>
-                    @foreach ($healthStatuses as $status)
-                        <option value="{{ $status }}" {{ request('health_status') === $status ? 'selected' : '' }}>{{ $status }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="flex items-end gap-3">
-                <button type="submit" class="flex-1 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50">Search</button>
-                <a href="{{ route('livestock.index') }}" class="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50">Clear</a>
+                {{-- Actions --}}
+                <div class="xl:col-span-1 flex gap-3 h-[42px]"> {{-- Match input height --}}
+                    <a href="{{ route('livestock.index') }}" class="flex-1 inline-flex items-center justify-center rounded-xl border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-bg-100 px-4 text-sm font-bold text-stone-700 dark:text-stone-300 transition-colors hover:bg-bg-200 dark:hover:bg-bg-100">
+                        Clear
+                    </a>
+                    <button type="submit" class="flex-[1.5] inline-flex items-center justify-center rounded-xl bg-bg-100 dark:bg-bg-100 px-4 text-sm font-bold text-white dark:text-txt-100 transition-colors hover:bg-bg-300 dark:hover:bg-bg-200 shadow-sm">
+                        Apply
+                    </button>
+                </div>
+                
+                {{-- Hidden Breed Filter (Maintained for logic but removed from main UI clutter if needed, or kept) --}}
+                <div class="hidden">
+                    <select id="filter-breed" name="breed">
+                        <option value="">All Breeds</option>
+                        @foreach ($breeds as $breed)
+                            <option value="{{ $breed }}" {{ request('breed') === $breed ? 'selected' : '' }}>{{ $breed }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </div>
     </form>
 
-    {{-- Content --}}
-    @if ($livestock->isEmpty())
-        <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
-            <div class="text-5xl mb-4">🐑</div>
-            @if (request()->hasAny(['tag_number', 'owner_name', 'owner_code', 'type', 'breed', 'health_status']))
-                <h3 class="text-xl font-bold text-slate-900">No livestock found</h3>
-                <p class="mt-2 text-sm text-slate-600">No animals match your search or filter criteria. Try adjusting your filters.</p>
-                <a href="{{ route('livestock.index') }}" class="mt-6 inline-flex rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-500">Clear Filters</a>
-            @else
-                <h3 class="text-xl font-bold text-slate-900">No livestock registered yet</h3>
-                <p class="mt-2 text-sm text-slate-600">Livestock entries will appear here once owners and their animals are added to the system.</p>
-            @endif
-        </div>
-    @else
-        {{-- Desktop Table --}}
-        <div class="hidden lg:block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm h-[600px] overflow-y-auto">
-            <div class="overflow-x-auto h-full relative">
-                <table class="w-full text-left text-sm relative">
-                    <thead class="sticky top-0 z-10">
-                        <tr class="border-b border-slate-200 bg-slate-50 backdrop-blur-sm">
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Tag</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Type</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Breed</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Age</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Health</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Owner</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Code</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach ($livestock as $animal)
-                            <?php
-                                $typeIcon = (function($t) { $m = ['cow'=>'🐄', 'cattle'=>'🐄', 'goat'=>'🐐', 'sheep'=>'🐑', 'pig'=>'🐖', 'horse'=>'🐴', 'chicken'=>'🐔', 'poultry'=>'🐔', 'duck'=>'🦆']; return $m[$t] ?? '🐾'; })(strtolower($animal->type));
-                                $statusClasses = [
-                                    'Healthy' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
-                                    'Sick' => 'bg-red-100 text-red-700 border-red-200',
-                                    'Under Treatment' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                                    'Hospitalized' => 'bg-slate-200 text-slate-800 border-slate-300',
-                                    'Injured' => 'bg-amber-100 text-amber-800 border-amber-200',
-                                    ][$animal->health_status] ?? 'bg-slate-100 text-slate-600 border-slate-200';
-                                $statusDot = [
-                                    'Healthy' => 'bg-emerald-500', 'Sick' => 'bg-red-500',
-                                    'Under Treatment' => 'bg-yellow-500', 'Hospitalized' => 'bg-slate-500',
-                                    'Injured' => 'bg-amber-500', ][$animal->health_status] ?? 'bg-slate-400';
-                            ?>
-                            <tr class="transition hover:bg-sky-50/50 cursor-pointer group" onclick="window.location='{{ route('livestock.show', $animal->id) }}'">
-                                <td class="px-5 py-3 font-mono font-medium text-slate-900">{{ $animal->tag_number }}</td>
-                                <td class="px-5 py-3 text-slate-800">
-                                    <span class="inline-flex items-center gap-1.5">{{ $typeIcon }} {{ $animal->type }}</span>
-                                </td>
-                                <td class="px-5 py-3 text-slate-600">{{ $animal->breed ?? '—' }}</td>
-                                <td class="px-5 py-3 text-slate-600">
-                                    @if ($animal->age !== null)
-                                        {{ $animal->age }}y
-                                    @else
-                                        —
-                                    @endif
-                                </td>
-                                <td class="px-5 py-3">
-                                    <span class="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider {{ $statusClasses }}">
-                                        <span class="h-1.5 w-1.5 rounded-full {{ $statusDot }}"></span>
-                                        {{ $animal->health_status }}
-                                    </span>
-                                </td>
-                                <td class="px-5 py-3 text-slate-700">{{ $animal->owner?->name ?? '—' }}</td>
-                                <td class="px-5 py-3">
-                                    <?php $ownerCode = $animal->owner?->owner_code; ?>
-                                    @if ($ownerCode)
-                                        <span class="rounded-full bg-sky-50 border border-sky-200 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sky-700">{{ $ownerCode }}</span>
-                                    @else
-                                        —
-                                    @endif
-                                </td>
-                                <td class="px-5 py-3 text-center" onclick="event.stopPropagation()">
-                                    <div class="flex items-center justify-center gap-1 opacity-0 transition group-hover:opacity-100">
-                                        <a href="{{ route('livestock.show', $animal->id) }}" class="p-1.5 text-slate-400 hover:text-sky-600 transition" title="View Profile">👁️</a>
-                                        <?php $canEdit = $currentUser?->isAdmin() || ($currentUser?->isOwner() && $animal->owner?->user_id === $currentUser->id); ?>
-                                        @if ($canEdit)
-                                            <a href="{{ route('livestock.edit', $animal->id) }}" class="p-1.5 text-slate-400 hover:text-amber-600 transition" title="Edit">✏️</a>
-                                        @endif
-                                        @if ($currentUser?->isAdmin())
-                                            <form method="POST" action="{{ route('livestock.destroy', $animal->id) }}" class="inline" onsubmit="return false;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="openDeleteModal(this.closest('form'))" class="p-1.5 text-slate-400 hover:text-red-600 transition" title="Delete">🗑️</button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </td>
+    {{-- Content Area --}}
+    <div class="relative z-10 animate-[fadeUp_0.8s_ease-out_forwards]">
+        @if ($livestock->isEmpty())
+            <div class="rounded-3xl border border-bg-300/80 dark:border-white/5 bg-bg-100 dark:bg-bg-100/50 backdrop-blur-sm px-6 py-20 text-center shadow-sm">
+                <div class="mx-auto w-24 h-24 mb-6 opacity-40 dark:opacity-20 flex items-center justify-center rounded-full bg-stone-200 dark:bg-bg-100">
+                    <span class="text-4xl filter grayscale">🐑</span>
+                </div>
+                
+                @if (request()->hasAny(['tag_number', 'owner_name', 'owner_code', 'type', 'breed', 'health_status']))
+                    <h3 class="text-xl font-bold text-txt-100 dark:text-white">No matches found</h3>
+                    <p class="mt-2 text-sm text-txt-200 dark:text-stone-400 max-w-sm mx-auto">We couldn't find any animals matching your current filter criteria.</p>
+                    <a href="{{ route('livestock.index') }}" class="mt-8 inline-flex items-center justify-center rounded-full border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-bg-100 px-6 py-2 text-sm font-bold text-stone-700 dark:text-stone-300 transition-colors hover:bg-bg-200 dark:hover:bg-bg-100">
+                        Clear All Filters
+                    </a>
+                @else
+                    <h3 class="text-xl font-bold text-txt-100 dark:text-white">Your registry is empty</h3>
+                    <p class="mt-2 text-sm text-txt-200 dark:text-stone-400 max-w-md mx-auto">You haven't registered any animals yet. Add your first livestock to start tracking their health and details.</p>
+                    <a href="{{ route('livestock.create') }}" class="mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-2 text-sm font-bold text-white transition-all hover:from-emerald-500 hover:to-emerald-600 border border-emerald-500/50">
+                        Add First Animal
+                    </a>
+                @endif
+            </div>
+        @else
+            {{-- Desktop Premium Table --}}
+            <div class="hidden lg:block overflow-hidden rounded-3xl border border-bg-300/80 dark:border-white/5 bg-bg-100 dark:bg-bg-100/85 backdrop-blur-xl shadow-sm h-[650px]">
+                <div class="overflow-x-auto h-full relative scrollbar-hide">
+                    <table class="w-full text-left text-sm relative border-collapse">
+                        <thead class="sticky top-0 z-20">
+                            <tr class="border-b border-bg-300/80 dark:border-white/5 bg-bg-200/95 dark:bg-[#151c19]/95 backdrop-blur-md">
+                                <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-txt-200 dark:text-stone-400">Tag Identity</th>
+                                <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-txt-200 dark:text-stone-400">Type & Breed</th>
+                                <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-txt-200 dark:text-stone-400">Age</th>
+                                <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-txt-200 dark:text-stone-400">Health Status</th>
+                                <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-txt-200 dark:text-stone-400">Owner Identity</th>
+                                <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-txt-200 dark:text-stone-400 text-right">Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100 dark:divide-white/5">
+                            @foreach ($livestock as $animal)
+                                <?php
+                                    $typeIcon = (function($t) { $m = ['cow'=>'🐄', 'cattle'=>'🐄', 'goat'=>'🐐', 'sheep'=>'🐑', 'pig'=>'🐖', 'horse'=>'🐴', 'chicken'=>'🐔', 'poultry'=>'🐔', 'duck'=>'🦆']; return $m[$t] ?? '🐾'; })(strtolower($animal->type));
+                                    $statusConfig = [
+                                        'Healthy' => ['bg' => 'bg-emerald-50 dark:bg-emerald-500/10', 'text' => 'text-emerald-700 dark:text-emerald-400', 'dot' => 'bg-emerald-500'],
+                                        'Sick' => ['bg' => 'bg-red-50 dark:bg-red-500/10', 'text' => 'text-red-700 dark:text-red-400', 'dot' => 'bg-red-500'],
+                                        'Under Treatment' => ['bg' => 'bg-yellow-50 dark:bg-yellow-500/10', 'text' => 'text-yellow-700 dark:text-yellow-400', 'dot' => 'bg-yellow-500'],
+                                        'Hospitalized' => ['bg' => 'bg-bg-200 dark:bg-bg-2000/10', 'text' => 'text-stone-700 dark:text-stone-400', 'dot' => 'bg-bg-2000'],
+                                        'Injured' => ['bg' => 'bg-amber-50 dark:bg-amber-500/10', 'text' => 'text-amber-700 dark:text-amber-400', 'dot' => 'bg-amber-500'],
+                                    ][$animal->health_status] ?? ['bg' => 'bg-bg-200 dark:bg-bg-100', 'text' => 'text-txt-200 dark:text-stone-400', 'dot' => 'bg-stone-400'];
+                                ?>
+                                <tr class="group cursor-pointer transition-colors hover:bg-bg-200/80 dark:hover:bg-bg-100/[0.02]" onclick="window.location='{{ route('livestock.show', $animal->id) }}'">
+                                    
+                                    {{-- Tag --}}
+                                    <td class="px-6 py-4">
+                                        <div class="font-mono text-sm font-bold text-txt-100 dark:text-white">{{ $animal->tag_number }}</div>
+                                    </td>
+                                    
+                                    {{-- Type/Breed --}}
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-base opacity-80 filter grayscale group-hover:grayscale-0 transition-all">{{ $typeIcon }}</span>
+                                            <div>
+                                                <div class="text-sm font-semibold text-txt-100 dark:text-stone-200">{{ $animal->type }}</div>
+                                                <div class="text-xs text-txt-200 dark:text-txt-200">{{ $animal->breed ?? 'Mixed Breed' }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    {{-- Age --}}
+                                    <td class="px-6 py-4 text-sm text-txt-200 dark:text-stone-400">
+                                        {{ $animal->age !== null ? $animal->age . ' yrs' : '—' }}
+                                    </td>
+                                    
+                                    {{-- Health --}}
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 rounded-full {{ $statusConfig['bg'] }} px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider {{ $statusConfig['text'] }}">
+                                            <span class="h-1.5 w-1.5 rounded-full {{ $statusConfig['dot'] }}"></span>
+                                            {{ $animal->health_status }}
+                                        </span>
+                                    </td>
+                                    
+                                    {{-- Owner --}}
+                                    <td class="px-6 py-4">
+                                        @if ($animal->owner)
+                                            <div class="flex items-center gap-2">
+                                                <span class="inline-flex rounded-md bg-bg-200 dark:bg-bg-100 border border-bg-300 dark:border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-txt-200 dark:text-stone-400">
+                                                    {{ $animal->owner->owner_code }}
+                                                </span>
+                                                <span class="text-sm font-medium text-stone-700 dark:text-stone-300 truncate max-w-[120px]">
+                                                    {{ $animal->owner->name }}
+                                                </span>
+                                            </div>
+                                        @else
+                                            <span class="text-sm text-stone-400">Unassigned</span>
+                                        @endif
+                                    </td>
+                                    
+                                    {{-- Actions --}}
+                                    <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+                                        <div class="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                            <a href="{{ route('livestock.show', $animal->id) }}" class="p-2 text-stone-400 hover:text-txt-100 dark:hover:text-white transition-colors" title="View Details">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </a>
+                                            <?php $canEdit = $currentUser?->isAdmin() || ($currentUser?->isOwner() && $animal->owner?->user_id === $currentUser->id); ?>
+                                            @if ($canEdit)
+                                                <a href="{{ route('livestock.edit', $animal->id) }}" class="p-2 text-stone-400 hover:text-emerald-600 transition-colors" title="Edit">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                                </a>
+                                            @endif
+                                            @if ($currentUser?->isAdmin())
+                                                <form method="POST" action="{{ route('livestock.destroy', $animal->id) }}" class="inline" onsubmit="return false;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" onclick="openDeleteModal(this.closest('form'))" class="p-2 text-stone-400 hover:text-red-500 transition-colors" title="Delete">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        {{-- Mobile Cards --}}
-        <div class="lg:hidden space-y-4">
-            @foreach ($livestock as $animal)
-                <?php
-                    $typeIcon = (function($t) { $m = ['cow'=>'🐄', 'cattle'=>'🐄', 'goat'=>'🐐', 'sheep'=>'🐑', 'pig'=>'🐖', 'horse'=>'🐴', 'chicken'=>'🐔', 'poultry'=>'🐔', 'duck'=>'🦆']; return $m[$t] ?? '🐾'; })(strtolower($animal->type));
-                    $mobileStatus = [
-                        'Healthy' => 'bg-emerald-100 text-emerald-700',
-                        'Sick' => 'bg-red-100 text-red-700',
-                        'Under Treatment' => 'bg-yellow-100 text-yellow-800',
-                        'Hospitalized' => 'bg-slate-200 text-slate-800',
-                        'Injured' => 'bg-amber-100 text-amber-800',
-                        ][$animal->health_status] ?? 'bg-slate-100 text-slate-600';
-                ?>
-                <a href="{{ route('livestock.show', $animal->id) }}" class="block rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-sky-300">
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="font-mono text-sm font-bold text-slate-900">{{ $animal->tag_number }}</span>
-                                <span class="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider {{ $mobileStatus }}">{{ $animal->health_status }}</span>
-                            </div>
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                {{ $typeIcon }} {{ $animal->type }}
-                                @if ($animal->breed)
-                                    <span class="text-slate-500 font-normal">· {{ $animal->breed }}</span>
-                                @endif
-                            </p>
+            {{-- Mobile Cards --}}
+            <div class="lg:hidden space-y-4">
+                @foreach ($livestock as $animal)
+                    <?php
+                        $typeIcon = (function($t) { $m = ['cow'=>'🐄', 'cattle'=>'🐄', 'goat'=>'🐐', 'sheep'=>'🐑', 'pig'=>'🐖', 'horse'=>'🐴', 'chicken'=>'🐔', 'poultry'=>'🐔', 'duck'=>'🦆']; return $m[$t] ?? '🐾'; })(strtolower($animal->type));
+                        $statusConfig = [
+                            'Healthy' => ['bg' => 'bg-emerald-50 dark:bg-emerald-500/10', 'text' => 'text-emerald-700 dark:text-emerald-400', 'dot' => 'bg-emerald-500'],
+                            'Sick' => ['bg' => 'bg-red-50 dark:bg-red-500/10', 'text' => 'text-red-700 dark:text-red-400', 'dot' => 'bg-red-500'],
+                            'Under Treatment' => ['bg' => 'bg-yellow-50 dark:bg-yellow-500/10', 'text' => 'text-yellow-700 dark:text-yellow-400', 'dot' => 'bg-yellow-500'],
+                            'Hospitalized' => ['bg' => 'bg-bg-200 dark:bg-bg-2000/10', 'text' => 'text-stone-700 dark:text-stone-400', 'dot' => 'bg-bg-2000'],
+                            'Injured' => ['bg' => 'bg-amber-50 dark:bg-amber-500/10', 'text' => 'text-amber-700 dark:text-amber-400', 'dot' => 'bg-amber-500'],
+                        ][$animal->health_status] ?? ['bg' => 'bg-bg-200 dark:bg-bg-100', 'text' => 'text-txt-200 dark:text-stone-400', 'dot' => 'bg-stone-400'];
+                    ?>
+                    <a href="{{ route('livestock.show', $animal->id) }}" class="block rounded-3xl border border-bg-300/80 dark:border-white/5 bg-bg-100 dark:bg-bg-100/85 p-5 shadow-sm transition-all hover:shadow-md hover:border-bg-300 dark:hover:border-white/10">
+                        <div class="flex items-start justify-between gap-3 mb-4">
+                            <div class="font-mono text-base font-bold text-txt-100 dark:text-white">{{ $animal->tag_number }}</div>
+                            <span class="inline-flex items-center gap-1.5 rounded-full {{ $statusConfig['bg'] }} px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider {{ $statusConfig['text'] }}">
+                                <span class="h-1.5 w-1.5 rounded-full {{ $statusConfig['dot'] }}"></span>
+                                {{ $animal->health_status }}
+                            </span>
                         </div>
-                    </div>
-                    <div class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-600">
-                        <span><span class="font-medium text-slate-400">Age:</span> {{ $animal->age !== null ? $animal->age . 'y' : '—' }}</span>
-                        <span><span class="font-medium text-slate-400">Owner:</span> {{ $animal->owner?->name ?? '—' }}</span>
-                    </div>
-                </a>
-            @endforeach
-        </div>
+                        
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-xl opacity-80 filter grayscale">{{ $typeIcon }}</span>
+                            <div>
+                                <div class="text-sm font-semibold text-txt-100 dark:text-stone-200">{{ $animal->type }}</div>
+                                <div class="text-xs text-txt-200 dark:text-txt-200">{{ $animal->breed ?? 'Mixed Breed' }}</div>
+                            </div>
+                        </div>
 
-        {{-- Pagination --}}
-        <div class="mt-6">
-            {{ $livestock->links() }}
-        </div>
-    @endif
-
-    {{-- Delete Modal --}}
-    <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-        <div class="mx-4 w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
-            <div class="text-center">
-                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-2xl">⚠️</div>
-                <h3 class="mt-4 text-lg font-bold text-slate-900">Delete Livestock</h3>
-                <p class="mt-1 text-sm text-slate-600">Are you sure you want to delete this animal record? This action cannot be undone.</p>
+                        <div class="grid grid-cols-2 gap-4 border-t border-stone-100 dark:border-white/5 pt-4">
+                            <div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest text-stone-400">Age</div>
+                                <div class="text-sm font-medium text-stone-700 dark:text-stone-300 mt-0.5">{{ $animal->age !== null ? $animal->age . ' yrs' : '—' }}</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest text-stone-400">Owner</div>
+                                <div class="text-sm font-medium text-stone-700 dark:text-stone-300 mt-0.5 truncate">{{ $animal->owner?->owner_code ?? '—' }}</div>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
             </div>
-            <div class="mt-6 flex gap-3">
-                <button type="button" onclick="closeDeleteModal()" class="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">Cancel</button>
-                <button type="button" id="confirm-delete-btn" class="flex-1 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500">Yes, Delete</button>
+
+            {{-- Pagination --}}
+            <div class="mt-8">
+                {{ $livestock->links() }}
+            </div>
+        @endif
+    </div>
+
+    {{-- Premium Delete Modal --}}
+    <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-bg-100/60 dark:bg-black/60 backdrop-blur-md transition-opacity">
+        <div class="mx-4 w-full max-w-sm rounded-3xl border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-bg-100 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.2)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div class="text-center mb-6">
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10 text-3xl mb-6 ring-4 ring-red-50 dark:ring-red-500/10">⚠️</div>
+                <h3 class="text-xl font-bold text-txt-100 dark:text-white">Delete Record</h3>
+                <p class="mt-3 text-sm font-light text-txt-200 dark:text-stone-400 leading-relaxed">
+                    Are you sure you want to delete this animal record? This action cannot be undone.
+                </p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeDeleteModal()" class="flex-1 rounded-full border border-bg-300 dark:border-white/10 bg-bg-100 dark:bg-bg-100 px-4 py-3 text-sm font-bold text-stone-700 dark:text-stone-300 transition-colors hover:bg-bg-200 dark:hover:bg-bg-100">Cancel</button>
+                <button type="button" id="confirm-delete-btn" class="flex-1 rounded-full bg-red-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-red-500 shadow-[0_0_15px_rgba(220,38,38,0.3)]">Yes, Delete</button>
             </div>
         </div>
     </div>
@@ -288,24 +348,25 @@
 
             function updateBreeds() {
                 const selectedType = typeSelect.value;
-                breedSelect.innerHTML = '<option value="">All Breeds</option>';
+                breedSelect.innerHTML = '<option value="" class="bg-bg-100 dark:bg-[#1a211e]">All Breeds</option>';
 
                 if (selectedType && breedMap[selectedType]) {
                     breedMap[selectedType].forEach(breed => {
                         const option = document.createElement('option');
                         option.value = breed;
                         option.textContent = breed;
+                        option.className = "bg-bg-100 dark:bg-[#1a211e]";
                         if (currentBreed === breed) {
                             option.selected = true;
                         }
                         breedSelect.appendChild(option);
                     });
                 } else if (!selectedType) {
-                    // If no type selected, show all breeds
                     Object.values(breedMap).flat().forEach(breed => {
                         const option = document.createElement('option');
                         option.value = breed;
                         option.textContent = breed;
+                        option.className = "bg-bg-100 dark:bg-[#1a211e]";
                         if (currentBreed === breed) {
                             option.selected = true;
                         }
@@ -316,9 +377,23 @@
 
             if (typeSelect && breedSelect) {
                 typeSelect.addEventListener('change', updateBreeds);
-                // Initialize on load
                 updateBreeds();
             }
         });
     </script>
+
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Hide scrollbar for table container */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 @endsection

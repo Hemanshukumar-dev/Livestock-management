@@ -20,24 +20,24 @@
             body { font-family: 'Inter', 'Figtree', system-ui, sans-serif; }
         </style>
     </head>
-    <body class="min-h-screen bg-[#f8faf5] text-gray-800 antialiased">
+    <body class="min-h-screen bg-[#f8faf5] text-txt-100 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
 
             {{-- Logo / Brand --}}
             <div class="mb-6 text-center">
                 <a href="/" class="inline-flex items-center gap-2 group">
                     <span class="text-4xl transition group-hover:scale-110">🐄</span>
-                    <span class="text-xl font-bold text-gray-800">Livestock System</span>
+                    <span class="text-xl font-bold text-txt-100">Livestock System</span>
                 </a>
             </div>
 
             {{-- Card --}}
-            <div class="w-full sm:max-w-md px-8 py-8 bg-white border border-slate-200 shadow-lg overflow-hidden rounded-3xl">
+            <div class="w-full sm:max-w-md px-8 py-8 bg-bg-100 border border-bg-300 shadow-lg overflow-hidden rounded-3xl">
                 {{ $slot }}
             </div>
 
             {{-- Footer link --}}
-            <p class="mt-6 text-sm text-slate-500">
+            <p class="mt-6 text-sm text-txt-200">
                 &copy; {{ date('Y') }} Livestock Management System
             </p>
         </div>

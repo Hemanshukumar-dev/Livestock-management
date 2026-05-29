@@ -22,8 +22,8 @@
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">Owner Records</p>
-            <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">All owners and their livestock</h2>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-600">Browse owner profiles and the livestock attached to each owner from a single clean interface.</p>
+            <h2 class="mt-1 text-2xl font-bold tracking-tight text-txt-100">All owners and their livestock</h2>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-txt-200">Browse owner profiles and the livestock attached to each owner from a single clean interface.</p>
         </div>
 
         @if ($currentUser?->isAdmin())
@@ -34,9 +34,9 @@
     </div>
 
     <!-- Search & Filter Section -->
-    <form method="GET" action="{{ route('owners.index') }}" class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <form method="GET" action="{{ route('owners.index') }}" class="mb-6 rounded-2xl border border-bg-300 bg-bg-100 p-5 shadow-sm">
         <div class="mb-4">
-            <p class="text-sm font-semibold uppercase tracking-[0.15em] text-slate-500">Search & Filter</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.15em] text-txt-200">Search & Filter</p>
         </div>
         
         <div class="grid gap-4 md:grid-cols-3 md:items-end">
@@ -49,7 +49,7 @@
                     name="search" 
                     value="{{ $search ?? '' }}"
                     placeholder="Enter owner name..."
-                    class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
+                    class="mt-2 w-full rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm text-txt-100 placeholder-slate-400 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
                 />
             </div>
 
@@ -59,7 +59,7 @@
                 <select 
                     id="type"
                     name="type"
-                    class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
+                    class="mt-2 w-full rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm text-txt-100 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
                 >
                     <option value="">All Types</option>
                     @forelse ($livestockTypes as $livestockType)
@@ -82,7 +82,7 @@
                 </button>
                 <a 
                     href="{{ route('owners.index') }}"
-                    class="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                    class="flex-1 rounded-lg border border-bg-300 bg-bg-100 px-4 py-2 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-bg-200"
                 >
                     Clear
                 </a>
@@ -91,17 +91,17 @@
     </form>
 
     @forelse ($owners as $owner)
-        <section class="mb-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-sky-200">
+        <section class="mb-3 rounded-2xl border border-bg-300 bg-bg-100 p-4 shadow-sm transition hover:shadow-md hover:border-sky-200">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex-1">
                     <div class="flex items-center gap-3">
-                        <h3 class="text-base font-bold text-slate-900">{{ $owner->name }}</h3>
+                        <h3 class="text-base font-bold text-txt-100">{{ $owner->name }}</h3>
                         <span class="rounded-full bg-sky-50 border border-sky-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700">{{ $owner->owner_code }}</span>
                     </div>
-                    <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+                    <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-txt-200">
                         <span class="flex items-center gap-1"><span class="text-slate-400">📞</span> {{ $owner->phone ?: 'No phone' }}</span>
                         <span class="flex items-center gap-1"><span class="text-slate-400">📍</span> {{ Str::limit($owner->address ?: 'No address', 40) }}</span>
-                        <span class="flex items-center gap-1 font-semibold text-slate-800"><span class="text-sky-500">🐄</span> {{ $owner->livestock->count() }} records</span>
+                        <span class="flex items-center gap-1 font-semibold text-txt-100"><span class="text-sky-500">🐄</span> {{ $owner->livestock->count() }} records</span>
                     </div>
                 </div>
                 
@@ -111,7 +111,7 @@
                     </a>
 
                     @if ($currentUser?->isAdmin() || ($currentUser?->isOwner() && $owner->user_id === $currentUser->id))
-                        <a href="{{ route('owners.edit', $owner->id) }}" class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+                        <a href="{{ route('owners.edit', $owner->id) }}" class="inline-flex items-center justify-center rounded-xl border border-bg-300 bg-bg-100 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-bg-200">
                             Edit
                         </a>
 
@@ -127,15 +127,15 @@
             </div>
         </section>
     @empty
-        <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center shadow-sm">
+        <div class="rounded-2xl border border-dashed border-bg-300 bg-bg-100 px-6 py-12 text-center shadow-sm">
             @if ($search || $type)
-                <h3 class="text-lg font-bold text-slate-900">No owners found</h3>
-                <p class="mt-1 text-sm text-slate-600">No owners match your search or filter criteria. Try adjusting your filters.</p>
-                <a href="{{ route('owners.index') }}" class="mt-4 inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Clear Filters</a>
+                <h3 class="text-lg font-bold text-txt-100">No owners found</h3>
+                <p class="mt-1 text-sm text-txt-200">No owners match your search or filter criteria. Try adjusting your filters.</p>
+                <a href="{{ route('owners.index') }}" class="mt-4 inline-flex rounded-xl bg-bg-100 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Clear Filters</a>
             @else
-                <h3 class="text-lg font-bold text-slate-900">No owners yet</h3>
-                <p class="mt-1 text-sm text-slate-600">Create the first owner and livestock entry to start populating the database.</p>
-                <a href="{{ route('owners.create') }}" class="mt-4 inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Add New Owner</a>
+                <h3 class="text-lg font-bold text-txt-100">No owners yet</h3>
+                <p class="mt-1 text-sm text-txt-200">Create the first owner and livestock entry to start populating the database.</p>
+                <a href="{{ route('owners.create') }}" class="mt-4 inline-flex rounded-xl bg-bg-100 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">Add New Owner</a>
             @endif
         </div>
     @endforelse

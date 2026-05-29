@@ -6,21 +6,21 @@
     @php $currentUser = auth()->user(); @endphp
 
     {{-- Breadcrumb --}}
-    <nav class="mb-6 flex items-center gap-2 text-sm text-slate-500">
+    <nav class="mb-6 flex items-center gap-2 text-sm text-txt-200">
         <a href="{{ route('livestock.index') }}" class="transition hover:text-green-700">Livestock</a>
         <span>/</span>
         <a href="{{ route('livestock.show', $livestock->id) }}" class="transition hover:text-green-700">{{ $livestock->tag_number }}</a>
         <span>/</span>
-        <span class="font-medium text-slate-800">Edit</span>
+        <span class="font-medium text-txt-100">Edit</span>
     </nav>
 
     {{-- Page Header --}}
     <div class="mb-8">
         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">✏️ Edit Livestock</p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-txt-100">
             Update {{ $livestock->tag_number }}
         </h2>
-        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-txt-200">
             Update the details for this animal. Only this individual record will be modified — no other livestock will be affected.
         </p>
     </div>
@@ -38,7 +38,7 @@
     @endif
 
     {{-- Edit Form --}}
-    <form method="POST" action="{{ route('livestock.update', $livestock->id) }}" class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <form method="POST" action="{{ route('livestock.update', $livestock->id) }}" class="rounded-3xl border border-bg-300 bg-bg-100 p-8 shadow-sm">
         @csrf
         @method('PUT')
 
@@ -53,7 +53,7 @@
                     id="edit-type"
                     name="type"
                     required
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 >
                     <option value="">Select Type</option>
                     @foreach ($livestockTypes as $type => $breedsList)
@@ -71,7 +71,7 @@
                 <select
                     id="edit-breed"
                     name="breed"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 >
                     <option value="">Select Breed (Optional)</option>
                 </select>
@@ -137,7 +137,7 @@
                     min="0"
                     required
                     placeholder="0"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 />
                 @error('age')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -153,7 +153,7 @@
                     id="edit-health"
                     name="health_status"
                     required
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 >
                     @foreach (['Healthy', 'Sick', 'Under Treatment', 'Hospitalized', 'Injured'] as $status)
                         <option value="{{ $status }}" @selected(old('health_status', $livestock->health_status) === $status)>
@@ -188,7 +188,7 @@
                     value="{{ old('tag_number', $livestock->tag_number) }}"
                     required
                     placeholder="e.g. TAG-001"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-mono text-slate-900 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm font-mono text-txt-100 placeholder-slate-400 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 />
                 @error('tag_number')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -204,7 +204,7 @@
                     id="edit-source"
                     name="source"
                     required
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 >
                     <option value="Born" @selected(old('source', $livestock->source) === 'Born')>🏠 Born on farm</option>
                     <option value="Purchased" @selected(old('source', $livestock->source) === 'Purchased')>🛒 Purchased</option>
@@ -222,7 +222,7 @@
                     id="edit-date"
                     name="date_added"
                     value="{{ old('date_added', $livestock->date_added ? \Illuminate\Support\Carbon::parse($livestock->date_added)->format('Y-m-d') : '') }}"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                    class="w-full rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-txt-100 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                 />
                 @error('date_added')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -232,15 +232,15 @@
 
         {{-- Owner Info (Read-only) --}}
         @if ($livestock->owner)
-            <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50/50 p-5">
-                <p class="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500 mb-3">Owner (cannot be changed here)</p>
+            <div class="mt-8 rounded-2xl border border-bg-300 bg-bg-200/50 p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.15em] text-txt-200 mb-3">Owner (cannot be changed here)</p>
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-sm font-bold text-green-700">
                         {{ strtoupper(substr($livestock->owner->name, 0, 1)) }}
                     </div>
                     <div>
-                        <p class="text-sm font-semibold text-slate-900">{{ $livestock->owner->name }}</p>
-                        <p class="text-xs text-slate-500">{{ $livestock->owner->owner_code }}</p>
+                        <p class="text-sm font-semibold text-txt-100">{{ $livestock->owner->name }}</p>
+                        <p class="text-xs text-txt-200">{{ $livestock->owner->owner_code }}</p>
                     </div>
                 </div>
             </div>
@@ -250,7 +250,7 @@
         <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between">
             <a
                 href="{{ route('livestock.show', $livestock->id) }}"
-                class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                class="inline-flex items-center justify-center rounded-xl border border-bg-300 bg-bg-100 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-bg-200"
             >
                 ← Cancel
             </a>
